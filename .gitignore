@@ -1,0 +1,3 @@
+ignore/*
+.DS_store
+_build/*
