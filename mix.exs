@@ -37,7 +37,7 @@ defmodule Machinery.Mixfile do
 
   defp description() do
     "Machinery is a State Machine library for structs in general.
-    It support guard clauses, callbacks and integrate out of the box
+    It supports guard clauses, callbacks and integrate out of the box
     with Phoenix apps."
   end
 

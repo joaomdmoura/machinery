@@ -10,7 +10,7 @@ Machinery is a State Machine library for structs in general.
 It also aims to have (when implemented with Phoenix) an optional build-in GUI
 that will represent each resource's state.
 
-Check proper [Machinery Docs]](https://hexdocs.pm/machinery)
+Check proper [Machinery Docs](https://hexdocs.pm/machinery)
 
 ## Installation
 

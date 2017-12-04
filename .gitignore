@@ -3,3 +3,4 @@ ignore/*
 _build/*
 assets/*
 deps/*
+docs/*
