@@ -8,6 +8,8 @@ defmodule Machinery do
   ## Parameters
 
     - opts: A Keyword including `states` and `transitions`.
+      - states: A List of Atoms representing each state.
+      - transitions: A List of Maps, including two keys `from` and `to`, to might be an Atom or a List of Atoms.
 
   ## Example
     ```
