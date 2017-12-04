@@ -13,7 +13,7 @@ defmodule Machinery.Mixfile do
       source_url: "https://github.com/joaomdmoura/machinery",
       docs: [
         main: "Machinery",
-        logo: "https://github.com/joaomdmoura/machinery/blob/master/logo.png",
+        logo: "logo.png",
         extras: ["README.md"]
       ],
       test_coverage: [tool: ExCoveralls]

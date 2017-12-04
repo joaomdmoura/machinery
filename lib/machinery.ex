@@ -5,7 +5,7 @@ defmodule Machinery do
   will be imported with `use` on the module that the state machine will
   be implemented.
 
-   ## Parameters
+  ## Parameters
 
     - opts: A Keyword including `states` and `transitions`.
 
