@@ -35,10 +35,11 @@ defmodule Machinery do
     # Quoted response to be inserted on the abstract syntax tree (AST) of
     # the module that imported this using `use`.
     quote bind_quoted: [states: states, transitions: transitions] do
+      @unallowed_transition_error "Transition to this state isn't allowed"
+      @guarded_transition_error "Transition not completed, blocked by guard function"
 
       # Mapping the declared states to create the functions for each one.
       Enum.map(states, fn(state) ->
-
         @doc """
         Triggers the transition of a struct to a new state if it passes the
         existing guard clause, also runs any before or after callbacks.
@@ -57,18 +58,20 @@ defmodule Machinery do
         """
         def transition_to(struct, unquote(state) = next_state) do
           current_state = Map.get(struct, :state)
-          if allowed_transition?(current_state, next_state) do
-            struct = Map.put(struct, :state, next_state)
-            {:ok, struct}
-          else
-            {:error, "Transition to this state isn't allowed"}
+          cond do
+            !allowed_transition?(current_state, next_state) ->
+              {:error, @unallowed_transition_error}
+            !guard_transition(struct, next_state) ->
+              {:error, @guarded_transition_error}
+            true ->
+              struct = Map.put(struct, :state, next_state)
+              {:ok, struct}
           end
         end
       end)
 
       defp allowed_transition?(current_state, next_state) do
-        transitions = unquote(Macro.escape(transitions))
-        case Map.fetch(transitions, current_state) do
+        case Map.fetch(unquote(Macro.escape(transitions)), current_state) do
           {:ok, [_|_] = allowed_states} -> Enum.member?(allowed_states, next_state)
           {:ok, allowed_state} -> allowed_state == next_state
           :error -> false
