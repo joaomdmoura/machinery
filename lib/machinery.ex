@@ -41,7 +41,7 @@ defmodule Machinery do
       @guarded_transition_error "Transition not completed, blocked by guard function"
 
       # Mapping the declared states to create the functions for each one.
-      Enum.map(states, fn(state) ->
+      Enum.each(states, fn(state) ->
         @doc """
         Triggers the transition of a struct to a new state if it passes the
         existing guard clause, also runs any before or after callbacks.
