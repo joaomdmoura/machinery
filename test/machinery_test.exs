@@ -36,4 +36,9 @@ defmodule MachineryTest do
     struct = %{state: :created, missing_fields: true}
     assert {:error, "Transition not completed, blocked by guard function"} = TestModule.transition_to(struct, :completed)
   end
+
+  test "The first declared state should be considered the initial one" do
+    stateless_struct = %{}
+    assert {:ok, %{state: :partial}} = TestModule.transition_to(stateless_struct, :partial)
+  end
 end

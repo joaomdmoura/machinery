@@ -24,6 +24,9 @@ defmodule Machinery do
     ```
   """
 
+  @unallowed_error "Transition to this state isn't allowed"
+  @guarded_error "Transition not completed, blocked by guard function"
+
   @doc """
   Main macro function that will be executed upon the load of the
   module using it.
@@ -36,9 +39,14 @@ defmodule Machinery do
 
     # Quoted response to be inserted on the abstract syntax tree (AST) of
     # the module that imported this using `use`.
-    quote bind_quoted: [states: states, transitions: transitions] do
-      @unallowed_transition_error "Transition to this state isn't allowed"
-      @guarded_transition_error "Transition not completed, blocked by guard function"
+    quote bind_quoted: [
+      states: states,
+      transitions: transitions,
+      unallowed_error: @unallowed_error,
+      guarded_error: @guarded_error
+    ] do
+
+      @initial_state List.first(states)
 
       # Mapping the declared states to create the functions for each one.
       Enum.each(states, fn(state) ->
@@ -59,12 +67,14 @@ defmodule Machinery do
 
         """
         def transition_to(struct, unquote(state) = next_state) do
-          current_state = Map.get(struct, :state)
+          current_state = Map.get(struct, :state, @initial_state)
           cond do
             !allowed_transition?(current_state, next_state) ->
-              {:error, @unallowed_transition_error}
+              {:error, unquote(Macro.escape(unallowed_error))}
+
             !guard_transition(struct, next_state) ->
-              {:error, @guarded_transition_error}
+              {:error, unquote(Macro.escape(guarded_error))}
+
             true ->
               struct = Map.put(struct, :state, next_state)
               {:ok, struct}
