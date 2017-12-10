@@ -28,8 +28,8 @@ end
 
 ### Declaring States
 
-Declare the states you'll have when importing `Machinery` on the module
-that will control your states transitions.
+Declare the states you need pasing it as an argment when importing `Machinery`
+on the module that will control your states transitions.
 
 Machinery expects a `Keyword` as argument with two keys `states` and `transitions`.
 
@@ -41,8 +41,7 @@ Machinery expects a `Keyword` as argument with two keys `states` and `transition
 ```elixir
 defmodule YourProject.UserStateMachine do
   use Machinery,
-    # The first state declared will be
-    # considered the intial state
+    # The first state declared will be considered the intial state
     states: [:created, :partial, :complete],
     transitions: %{
       created: [:partial, :complete],
@@ -53,26 +52,29 @@ defmodule YourProject.UserStateMachine do
   # of the guard_transition/2 function, pattern matching
   # the desired state you want to guard.
   #
-  # Return true: Guard clause will allow the transition
-  # Return false: Transition won't be allowed
+  # Guard conditions should return a boolean:
+  # true: Guard clause will allow the transition
+  # false: Transition won't be allowed
   #
-  defp guard_transition(struct, :complete) do
+  def guard_transition(struct, :complete) do
    Map.get(struct, :missing_fields) == false
   end
 
   ############
   # REQUIRED: It's required for you to include this function.
   # it will act as fallback for states that don't have guard functions.
-  # Allowing their transactions.
+  # Allowing their transitons to go through
   ############
-  defp guard_transition(_struct, _state), do: true
+  def guard_transition(_struct, _state), do: true
 end
 ```
 
 ## Usage
 
-To transit a struct into another state, you just need to call the
-`Module.transition_to(your_struct, :next_state)`.
+To transit a struct into another state, you just need to call `Machinery.transition_to/2`
+```elixir
+Machinery.transition_to(your_struct, :next_state)
+```
 
 ### Example
 
