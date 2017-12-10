@@ -41,54 +41,61 @@ defmodule Machinery do
     # the module that imported this using `use`.
     quote bind_quoted: [
       states: states,
-      transitions: transitions,
-      unallowed_error: @unallowed_error,
-      guarded_error: @guarded_error
+      transitions: transitions
     ] do
 
-      @initial_state List.first(states)
-
-      # Mapping the declared states to create the functions for each one.
-      Enum.each(states, fn(state) ->
-        @doc """
-        Triggers the transition of a struct to a new state if it passes the
-        existing guard clause, also runs any before or after callbacks.
-        It returns a tuple with {:ok, state}, or {:error, "cause"}.
-
-        ## Parameters
-
-          - struct: A Struct based on a module using Machinery.
-          - next_state: Atom of the next state you want to transition to.
-
-        ## Examples
-
-            iex> User.transition_to(%User{state: partial}, :completed)
-            {:ok, %User{state: completed}}
-
-        """
-        def transition_to(struct, unquote(state) = next_state) do
-          current_state = Map.get(struct, :state, @initial_state)
-          cond do
-            !allowed_transition?(current_state, next_state) ->
-              {:error, unquote(Macro.escape(unallowed_error))}
-
-            !guard_transition(struct, next_state) ->
-              {:error, unquote(Macro.escape(guarded_error))}
-
-            true ->
-              struct = Map.put(struct, :state, next_state)
-              {:ok, struct}
-          end
-        end
-      end)
-
-      defp allowed_transition?(current_state, next_state) do
-        case Map.fetch(unquote(Macro.escape(transitions)), current_state) do
-          {:ok, [_|_] = allowed_states} -> Enum.member?(allowed_states, next_state)
-          {:ok, allowed_state} -> allowed_state == next_state
-          :error -> false
-        end
-      end
+      # Functions to hold and expose internal info of the states.
+      def _machinery_initial_state(), do: List.first(unquote(states))
+      def _machinery_states(), do: unquote(states)
+      def _machinery_transitions(), do: unquote(Macro.escape(transitions))
     end
   end
+
+  @doc """
+  Triggers the transition of a struct to a new state if it passes the
+  existing guard clause, also runs any before or after callbacks.
+  It returns a tuple with {:ok, state}, or {:error, "cause"}.
+
+  ## Parameters
+
+    - struct: A Struct based on a module using Machinery.
+    - next_state: Atom of the next state you want to transition to.
+
+  ## Examples
+
+      Machinery.transition_to(%User{state: :partial}, :completed)
+      {:ok, %User{state: :completed}}
+  """
+  def transition_to(struct, next_state) do
+    module = module_for_struct(struct)
+    initial_state = module._machinery_initial_state()
+    transitions = module._machinery_transitions()
+
+    current_state = case Map.get(struct, :state) do
+      nil -> initial_state
+      current_state -> current_state
+    end
+
+    cond do
+      !allowed_transition?(transitions, current_state, next_state) ->
+        {:error, @unallowed_error}
+
+      !module.guard_transition(struct, next_state) ->
+        {:error, @guarded_error}
+
+      true ->
+        struct = Map.put(struct, :state, next_state)
+        {:ok, struct}
+    end
+  end
+
+  defp allowed_transition?(transitions, current_state, next_state) do
+    case Map.fetch(transitions, current_state) do
+      {:ok, [_|_] = allowed_states} -> Enum.member?(allowed_states, next_state)
+      {:ok, allowed_state} -> allowed_state == next_state
+      :error -> false
+    end
+  end
+
+  defp module_for_struct(struct), do: struct.__struct__
 end
