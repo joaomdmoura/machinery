@@ -67,15 +67,19 @@ defmodule Machinery do
       {:ok, %User{state: :completed}}
   """
   def transition_to(struct, next_state) do
-    module = module_for_struct(struct)
+    module = struct.__struct__
     initial_state = module._machinery_initial_state()
     transitions = module._machinery_transitions()
 
+    # Getting current state of the struct of falling back to the
+    # first declared state on the struct model.
     current_state = case Map.get(struct, :state) do
       nil -> initial_state
       current_state -> current_state
     end
 
+    # Checking allowed transitions and guard functions before
+    # actually updating the struct and retuning the tuple.
     cond do
       !allowed_transition?(transitions, current_state, next_state) ->
         {:error, @unallowed_error}
@@ -89,6 +93,9 @@ defmodule Machinery do
     end
   end
 
+  # Default guard transition fallback to make sure all
+  # transitions are permitted unless another existing
+  # guard condition exists.
   defp guard_transition(module, struct, next_state) do
     try do
       module.guard_transition(struct,next_state)
@@ -98,6 +105,7 @@ defmodule Machinery do
     end
   end
 
+  # Private function to check if the transition is allowed.
   defp allowed_transition?(transitions, current_state, next_state) do
     case Map.fetch(transitions, current_state) do
       {:ok, [_|_] = allowed_states} -> Enum.member?(allowed_states, next_state)
@@ -106,8 +114,9 @@ defmodule Machinery do
     end
   end
 
-  defp module_for_struct(struct), do: struct.__struct__
-
+  # If the exception passed id related to a specific signature of
+  # guard_transition/2 it will fallback returning true and
+  # allwoing the transition, otherwise it will raise the exception.
   defp guard_transition_fallback?(error) do
     if error.function == :guard_transition && error.arity == 2 do
       true

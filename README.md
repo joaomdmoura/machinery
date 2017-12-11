@@ -48,9 +48,9 @@ defmodule YourProject.UserStateMachine do
       partial: :completed
     }
 
-  # Create guard conditions by adding new signatures
-  # of the guard_transition/2 function, pattern matching
-  # the desired state you want to guard.
+  # Create guard conditions by adding signatures of the
+  # guard_transition/2 function, pattern matching the
+  # desired state you want to guard.
   #
   # Guard conditions should return a boolean:
   # true: Guard clause will allow the transition
@@ -59,13 +59,6 @@ defmodule YourProject.UserStateMachine do
   def guard_transition(struct, :complete) do
    Map.get(struct, :missing_fields) == false
   end
-
-  ############
-  # REQUIRED: It's required for you to include this function.
-  # it will act as fallback for states that don't have guard functions.
-  # Allowing their transitons to go through
-  ############
-  def guard_transition(_struct, _state), do: true
 end
 ```
 
