@@ -43,6 +43,7 @@ defmodule Machinery do
       states: states,
       transitions: transitions
     ] do
+      @behaviour Machinery.StructBehaviour
 
       # Functions to hold and expose internal info of the states.
       def _machinery_initial_state(), do: List.first(unquote(states))
