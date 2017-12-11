@@ -57,6 +57,9 @@ defmodule YourProject.UserStateMachine do
   # guard_transition/2 function, pattern matching the
   # desired state you want to guard.
   #
+  # Eg.
+  # guard_transition(unmodified_struct, :next_state)
+  #
   # Guard conditions should return a boolean:
   # true: Guard clause will allow the transition
   # false: Transition won't be allowed
@@ -70,8 +73,16 @@ end
 ## Usage
 
 To transit a struct into another state, you just need to call `Machinery.transition_to/2`
+
+### `Machinery.transition_to/2`
+It takes two arguments:
+
+- struct: The struct you want to transit to another state
+- next_event: An atom representing the next state you want the struct to transition to
+
 ```elixir
 Machinery.transition_to(your_struct, :next_state)
+# {:ok, updated_struct}
 ```
 
 ### Example
