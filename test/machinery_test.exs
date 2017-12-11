@@ -53,13 +53,13 @@ defmodule MachineryTest do
     assert {:ok, %TestModuleWithGuard{state: :partial}} = Machinery.transition_to(created_struct, :partial)
     assert {:ok, %TestModuleWithGuard{state: :completed, missing_fields: false}} = Machinery.transition_to(created_struct, :completed)
     assert {:ok, %TestModuleWithGuard{state: :completed, missing_fields: false}} = Machinery.transition_to(partial_struct, :completed)
-    assert {:error, "Transition to this state isn't allowed"} = Machinery.transition_to(stateless_struct, :created)
-    assert {:error, "Transition to this state isn't allowed"} = Machinery.transition_to(completed_struct, :created)
+    assert {:error, "Transition to this state isn't declared."} = Machinery.transition_to(stateless_struct, :created)
+    assert {:error, "Transition to this state isn't declared."} = Machinery.transition_to(completed_struct, :created)
   end
 
   test "Guard functions should be executed before moving the resource to the next state" do
     struct = %TestModuleWithGuard{state: :created, missing_fields: true}
-    assert {:error, "Transition not completed, blocked by guard function"} = Machinery.transition_to(struct, :completed)
+    assert {:error, "Transition not completed, blocked by guard function."} = Machinery.transition_to(struct, :completed)
   end
 
   test "Guard functions should allow or block transitions" do
@@ -67,7 +67,7 @@ defmodule MachineryTest do
     blocked_struct = %TestModuleWithGuard{state: :created, missing_fields: true}
 
     assert {:ok, %TestModuleWithGuard{state: :completed, missing_fields: false}} = Machinery.transition_to(allowed_struct, :completed)
-    assert {:error, "Transition not completed, blocked by guard function"} = Machinery.transition_to(blocked_struct, :completed)
+    assert {:error, "Transition not completed, blocked by guard function."} = Machinery.transition_to(blocked_struct, :completed)
   end
 
   test "The first declared state should be considered the initial one" do

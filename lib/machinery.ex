@@ -9,7 +9,7 @@ defmodule Machinery do
 
     - `opts`: A Keyword including `states` and `transitions`.
       - `states`: A List of Atoms representing each state.
-      - `transitions`: A List of Maps, including two keys `from` and `to`, to might be an Atom or a List of Atoms.
+      - `transitions`: A List of Maps, including two keys `from` and `to`, `to` might be an Atom or a List of Atoms.
 
   ## Example
     ```
@@ -24,8 +24,10 @@ defmodule Machinery do
     ```
   """
 
-  @unallowed_error "Transition to this state isn't allowed"
-  @guarded_error "Transition not completed, blocked by guard function"
+  alias Machinery.Transition
+
+  @not_declated_error "Transition to this state isn't declared."
+  @guarded_error "Transition not completed, blocked by guard function."
 
   @doc """
   Main macro function that will be executed upon the load of the
@@ -79,48 +81,18 @@ defmodule Machinery do
       current_state -> current_state
     end
 
-    # Checking allowed transitions and guard functions before
+    # Checking declared transitions and guard functions before
     # actually updating the struct and retuning the tuple.
     cond do
-      !allowed_transition?(transitions, current_state, next_state) ->
-        {:error, @unallowed_error}
+      !Transition.declared_transition?(transitions, current_state, next_state) ->
+        {:error, @not_declated_error}
 
-      !guard_transition(module, struct, next_state) ->
+      Transition.guarded_transition?(module, struct, next_state) ->
         {:error, @guarded_error}
 
       true ->
         struct = Map.put(struct, :state, next_state)
         {:ok, struct}
-    end
-  end
-
-  # Default guard transition fallback to make sure all
-  # transitions are permitted unless another existing
-  # guard condition exists.
-  defp guard_transition(module, struct, next_state) do
-    module.guard_transition(struct, next_state)
-  rescue
-    error in UndefinedFunctionError -> guard_transition_fallback?(error)
-    error in FunctionClauseError -> guard_transition_fallback?(error)
-  end
-
-  # Private function to check if the transition is allowed.
-  defp allowed_transition?(transitions, current_state, next_state) do
-    case Map.fetch(transitions, current_state) do
-      {:ok, [_|_] = allowed_states} -> Enum.member?(allowed_states, next_state)
-      {:ok, allowed_state} -> allowed_state == next_state
-      :error -> false
-    end
-  end
-
-  # If the exception passed id related to a specific signature of
-  # guard_transition/2 it will fallback returning true and
-  # allwoing the transition, otherwise it will raise the exception.
-  defp guard_transition_fallback?(error) do
-    if error.function == :guard_transition && error.arity == 2 do
-      true
-    else
-      raise error
     end
   end
 end
