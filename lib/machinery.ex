@@ -97,12 +97,10 @@ defmodule Machinery do
   # transitions are permitted unless another existing
   # guard condition exists.
   defp guard_transition(module, struct, next_state) do
-    try do
-      module.guard_transition(struct,next_state)
-    rescue
-      error in UndefinedFunctionError -> guard_transition_fallback?(error)
-      error in FunctionClauseError -> guard_transition_fallback?(error)
-    end
+    module.guard_transition(struct, next_state)
+  rescue
+    error in UndefinedFunctionError -> guard_transition_fallback?(error)
+    error in FunctionClauseError -> guard_transition_fallback?(error)
   end
 
   # Private function to check if the transition is allowed.
