@@ -17,8 +17,6 @@ defmodule MachineryTest do
     def guard_transition(struct, :completed) do
       Map.get(struct, :missing_fields) == false
     end
-
-    def guard_transition(_struct, _state), do: true
   end
 
   test "All internal functions should be injected into AST" do

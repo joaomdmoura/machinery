@@ -43,7 +43,6 @@ defmodule Machinery do
       states: states,
       transitions: transitions
     ] do
-      @behaviour Machinery.StructBehaviour
 
       # Functions to hold and expose internal info of the states.
       def _machinery_initial_state(), do: List.first(unquote(states))
@@ -81,12 +80,21 @@ defmodule Machinery do
       !allowed_transition?(transitions, current_state, next_state) ->
         {:error, @unallowed_error}
 
-      !module.guard_transition(struct, next_state) ->
+      !guard_transition(module, struct, next_state) ->
         {:error, @guarded_error}
 
       true ->
         struct = Map.put(struct, :state, next_state)
         {:ok, struct}
+    end
+  end
+
+  defp guard_transition(module, struct, next_state) do
+    try do
+      module.guard_transition(struct,next_state)
+    rescue
+      error in UndefinedFunctionError -> guard_transition_fallback?(error)
+      error in FunctionClauseError -> guard_transition_fallback?(error)
     end
   end
 
@@ -99,4 +107,12 @@ defmodule Machinery do
   end
 
   defp module_for_struct(struct), do: struct.__struct__
+
+  defp guard_transition_fallback?(error) do
+    if error.function == :guard_transition && error.arity == 2 do
+      true
+    else
+      raise error
+    end
+  end
 end
