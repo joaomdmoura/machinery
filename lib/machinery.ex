@@ -41,54 +41,85 @@ defmodule Machinery do
     # the module that imported this using `use`.
     quote bind_quoted: [
       states: states,
-      transitions: transitions,
-      unallowed_error: @unallowed_error,
-      guarded_error: @guarded_error
+      transitions: transitions
     ] do
 
-      @initial_state List.first(states)
+      # Functions to hold and expose internal info of the states.
+      def _machinery_initial_state(), do: List.first(unquote(states))
+      def _machinery_states(), do: unquote(states)
+      def _machinery_transitions(), do: unquote(Macro.escape(transitions))
+    end
+  end
 
-      # Mapping the declared states to create the functions for each one.
-      Enum.each(states, fn(state) ->
-        @doc """
-        Triggers the transition of a struct to a new state if it passes the
-        existing guard clause, also runs any before or after callbacks.
-        It returns a tuple with {:ok, state}, or {:error, "cause"}.
+  @doc """
+  Triggers the transition of a struct to a new state if it passes the
+  existing guard clause, also runs any before or after callbacks.
+  It returns a tuple with {:ok, state}, or {:error, "cause"}.
 
-        ## Parameters
+  ## Parameters
 
-          - struct: A Struct based on a module using Machinery.
-          - next_state: Atom of the next state you want to transition to.
+    - struct: A Struct based on a module using Machinery.
+    - next_state: Atom of the next state you want to transition to.
 
-        ## Examples
+  ## Examples
 
-            iex> User.transition_to(%User{state: partial}, :completed)
-            {:ok, %User{state: completed}}
+      Machinery.transition_to(%User{state: :partial}, :completed)
+      {:ok, %User{state: :completed}}
+  """
+  def transition_to(struct, next_state) do
+    module = struct.__struct__
+    initial_state = module._machinery_initial_state()
+    transitions = module._machinery_transitions()
 
-        """
-        def transition_to(struct, unquote(state) = next_state) do
-          current_state = Map.get(struct, :state, @initial_state)
-          cond do
-            !allowed_transition?(current_state, next_state) ->
-              {:error, unquote(Macro.escape(unallowed_error))}
+    # Getting current state of the struct of falling back to the
+    # first declared state on the struct model.
+    current_state = case Map.get(struct, :state) do
+      nil -> initial_state
+      current_state -> current_state
+    end
 
-            !guard_transition(struct, next_state) ->
-              {:error, unquote(Macro.escape(guarded_error))}
+    # Checking allowed transitions and guard functions before
+    # actually updating the struct and retuning the tuple.
+    cond do
+      !allowed_transition?(transitions, current_state, next_state) ->
+        {:error, @unallowed_error}
 
-            true ->
-              struct = Map.put(struct, :state, next_state)
-              {:ok, struct}
-          end
-        end
-      end)
+      !guard_transition(module, struct, next_state) ->
+        {:error, @guarded_error}
 
-      defp allowed_transition?(current_state, next_state) do
-        case Map.fetch(unquote(Macro.escape(transitions)), current_state) do
-          {:ok, [_|_] = allowed_states} -> Enum.member?(allowed_states, next_state)
-          {:ok, allowed_state} -> allowed_state == next_state
-          :error -> false
-        end
-      end
+      true ->
+        struct = Map.put(struct, :state, next_state)
+        {:ok, struct}
+    end
+  end
+
+  # Default guard transition fallback to make sure all
+  # transitions are permitted unless another existing
+  # guard condition exists.
+  defp guard_transition(module, struct, next_state) do
+    module.guard_transition(struct, next_state)
+  rescue
+    error in UndefinedFunctionError -> guard_transition_fallback?(error)
+    error in FunctionClauseError -> guard_transition_fallback?(error)
+  end
+
+  # Private function to check if the transition is allowed.
+  defp allowed_transition?(transitions, current_state, next_state) do
+    case Map.fetch(transitions, current_state) do
+      {:ok, [_|_] = allowed_states} -> Enum.member?(allowed_states, next_state)
+      {:ok, allowed_state} -> allowed_state == next_state
+      :error -> false
+    end
+  end
+
+  # If the exception passed id related to a specific signature of
+  # guard_transition/2 it will fallback returning true and
+  # allwoing the transition, otherwise it will raise the exception.
+  defp guard_transition_fallback?(error) do
+    if error.function == :guard_transition && error.arity == 2 do
+      true
+    else
+      raise error
     end
   end
 end
