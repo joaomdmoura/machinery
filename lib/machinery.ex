@@ -7,9 +7,9 @@ defmodule Machinery do
 
   ## Parameters
 
-    - opts: A Keyword including `states` and `transitions`.
-      - states: A List of Atoms representing each state.
-      - transitions: A List of Maps, including two keys `from` and `to`, to might be an Atom or a List of Atoms.
+    - `opts`: A Keyword including `states` and `transitions`.
+      - `states`: A List of Atoms representing each state.
+      - `transitions`: A List of Maps, including two keys `from` and `to`, to might be an Atom or a List of Atoms.
 
   ## Example
     ```
@@ -54,18 +54,19 @@ defmodule Machinery do
   @doc """
   Triggers the transition of a struct to a new state if it passes the
   existing guard clause, also runs any before or after callbacks.
-  It returns a tuple with {:ok, state}, or {:error, "cause"}.
+  It returns a tuple with `{:ok, state}`, or `{:error, "cause"}`.
 
   ## Parameters
 
-    - struct: A Struct based on a module using Machinery.
-    - next_state: Atom of the next state you want to transition to.
+    - `struct`: A Struct based on a module using Machinery.
+    - `next_state`: Atom of the next state you want to transition to.
 
   ## Examples
 
       Machinery.transition_to(%User{state: :partial}, :completed)
       {:ok, %User{state: :completed}}
   """
+  @spec transition_to(struct, atom) :: {:ok, struct} | {:error, String.t}
   def transition_to(struct, next_state) do
     module = struct.__struct__
     initial_state = module._machinery_initial_state()
