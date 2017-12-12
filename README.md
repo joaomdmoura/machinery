@@ -11,11 +11,7 @@ Pheonix out of the box.
 It also aims to have (when implemented with Phoenix) an optional build-in GUI
 that will represent each resource's state.
 
-## DISCLAMER
-
-Machinery is under heavy development, this README does't match the docs for the
-current released version `0.2.0`, you can check the docs on the proper released
-[Machinery Docs](https://hexdocs.pm/machinery)
+Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 
 - [Installing](#installing)
 - [Declaring States](#declaring-states)
@@ -32,7 +28,7 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:machinery, "~> 0.2.0"}
+    {:machinery, "~> 0.4.0"}
   ]
 end
 ```
