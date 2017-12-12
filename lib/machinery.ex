@@ -91,7 +91,10 @@ defmodule Machinery do
         {:error, @guarded_error}
 
       true ->
-        struct = Map.put(struct, :state, next_state)
+        struct = struct
+          |> Transition.run_before_callbacks(next_state, module)
+          |> Map.put(:state, next_state)
+          |> Transition.run_after_callbacks(next_state, module)
         {:ok, struct}
     end
   end

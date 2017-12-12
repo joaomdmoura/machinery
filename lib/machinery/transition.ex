@@ -6,6 +6,19 @@ defmodule Machinery.Transition do
   """
 
   @doc """
+  Function responsible for checking if the transition from a state to another
+  was specifically declared.
+  """
+  @spec declared_transition?(list, atom, atom) :: boolean
+  def declared_transition?(transitions, current_state, next_state) do
+    case Map.fetch(transitions, current_state) do
+      {:ok, [_|_] = declared_states} -> Enum.member?(declared_states, next_state)
+      {:ok, declared_state} -> declared_state == next_state
+      :error -> false
+    end
+  end
+
+  @doc """
   Default guard transition fallback to make sure all transitions are permitted
   unless another existing guard condition exists.
   """
@@ -17,16 +30,25 @@ defmodule Machinery.Transition do
     error in FunctionClauseError -> guard_transition_fallback?(error)
   end
 
-  @doc """
-  Function responsible for checking if the transition from a state to another
-  was specifically declared.
-  """
-  @spec declared_transition?(list, atom, atom) :: boolean
-  def declared_transition?(transitions, current_state, next_state) do
-    case Map.fetch(transitions, current_state) do
-      {:ok, [_|_] = declared_states} -> Enum.member?(declared_states, next_state)
-      {:ok, declared_state} -> declared_state == next_state
-      :error -> false
+  def run_before_callbacks(struct, state, module) do
+    module.before_transition(struct, state)
+  rescue
+    error in UndefinedFunctionError -> callbacks_fallback(struct, error)
+    error in FunctionClauseError -> callbacks_fallback(struct, error)
+  end
+
+  def run_after_callbacks(struct, state, module) do
+    module.after_transition(struct, state)
+  rescue
+    error in UndefinedFunctionError -> callbacks_fallback(struct, error)
+    error in FunctionClauseError -> callbacks_fallback(struct, error)
+  end
+
+  defp callbacks_fallback(struct, error) do
+    if error.function in [:after_transition, :before_transition] && error.arity == 2 do
+      struct
+    else
+      raise error
     end
   end
 
