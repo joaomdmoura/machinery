@@ -87,14 +87,14 @@ defmodule Machinery do
       !Transition.declared_transition?(transitions, current_state, next_state) ->
         {:error, @not_declated_error}
 
-      Transition.guarded_transition?(module, struct, next_state) ->
+      !Transition.guarded_transition?(module, struct, next_state) ->
         {:error, @guarded_error}
 
       true ->
         struct = struct
-          |> Transition.run_before_callbacks(next_state, module)
+          |> Transition.before_callbacks(next_state, module)
           |> Map.put(:state, next_state)
-          |> Transition.run_after_callbacks(next_state, module)
+          |> Transition.after_callbacks(next_state, module)
         {:ok, struct}
     end
   end
