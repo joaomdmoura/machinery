@@ -44,8 +44,8 @@ on the module that will control your states transitions.
 
 Machinery expects a `Keyword` as argument with two keys `states` and `transitions`.
 
-- states: A List of Atoms representing each state.
-- transitions: A List of Maps, including two keys `from` and `to`, `to` might be an Atom or a List of Atoms.
+- `states`: A List of Atoms representing each state.
+- `transitions`: A List of Maps, including two keys `from` and `to`, `to` might be an Atom or a List of Atoms.
 
 ### Example
 
@@ -68,8 +68,8 @@ To transit a struct into another state, you just need to call `Machinery.transit
 ### `Machinery.transition_to/2`
 It takes two arguments:
 
-- struct: The struct you want to transit to another state
-- next_event: An atom representing the next state you want the struct to transition to
+- `struct`: The struct you want to transit to another state
+- `next_event`: An atom representing the next state you want the struct to transition to
 
 ```elixir
 Machinery.transition_to(your_struct, :next_state)
