@@ -2,12 +2,13 @@ defmodule Machinery.Transition do
   @moduledoc """
   Machinery module responsible for control transitions,
   guard functions and callbacks (before and after).
-  It's meant to be for internal use only.
+  This is meant to be for internal use only.
   """
 
   @doc """
   Function responsible for checking if the transition from a state to another
   was specifically declared.
+  This is meant to be for internal use only.
   """
   @spec declared_transition?(list, atom, atom) :: boolean
   def declared_transition?(transitions, current_state, next_state) do
@@ -21,7 +22,7 @@ defmodule Machinery.Transition do
   @doc """
   Default guard transition fallback to make sure all transitions are permitted
   unless another existing guard condition exists.
-  It's meant to be for internal use only.
+  This is meant to be for internal use only.
   """
   @spec guarded_transition?(module, struct, atom) :: boolean
   def guarded_transition?(module, struct, state) do
@@ -30,7 +31,8 @@ defmodule Machinery.Transition do
 
   @doc """
   Function responsible to run all before_transitions callbacks or
-  fallback to a boilerplate behaviour. It's meant to be for internal use only.
+  fallback to a boilerplate behaviour.
+  This is meant to be for internal use only.
   """
   @spec before_callbacks(struct, atom, module) :: struct
   def before_callbacks(struct, state, module) do
@@ -39,7 +41,8 @@ defmodule Machinery.Transition do
 
   @doc """
   Function responsible to run all after_transitions callbacks or
-  fallback to a boilerplate behaviour. It's meant to be for internal use only.
+  fallback to a boilerplate behaviour.
+  This is meant to be for internal use only.
   """
   @spec after_callbacks(struct, atom, module) :: struct
   def after_callbacks(struct, state, module) do

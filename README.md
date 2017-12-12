@@ -11,14 +11,20 @@ Pheonix out of the box.
 It also aims to have (when implemented with Phoenix) an optional build-in GUI
 that will represent each resource's state.
 
-### DISCLAMER
+## DISCLAMER
 
 Machinery is under heavy development, this README does't match the docs for the
-current released version `0.2.0`, you can check the docs on the link bellow.
+current released version `0.2.0`, you can check the docs on the proper released
+[Machinery Docs](https://hexdocs.pm/machinery)
 
-Check proper [Machinery Docs](https://hexdocs.pm/machinery)
+- [Installing](#installing)
+- [Declaring States](#declaring-states)
+- [Changing States](#changing-states)
+- [Guard Functions](#guard-functions)
+- [Before and After Callbacks](#before-and-after-callbacks)
 
-## Installation
+
+## Installing
 
 The package can be installed by adding `machinery` to your list of
 dependencies in `mix.exs`:
@@ -54,6 +60,30 @@ defmodule YourProject.UserStateMachine do
     }
 end
 ```
+
+## Changing States
+
+To transit a struct into another state, you just need to call `Machinery.transition_to/2`
+
+### `Machinery.transition_to/2`
+It takes two arguments:
+
+- struct: The struct you want to transit to another state
+- next_event: An atom representing the next state you want the struct to transition to
+
+```elixir
+Machinery.transition_to(your_struct, :next_state)
+# {:ok, updated_struct}
+```
+
+### Example:
+
+```elixir
+user = Accounts.get_user!(1)
+UserStateMachine.transition_to(user, :partial)
+```
+
+Guard functions, before and after callbacks will be checked automatically.
 
 ## Guard functions
 Create guard conditions by adding signatures of the `guard_transition/2`
@@ -107,27 +137,3 @@ defmodule YourProject.UserStateMachine do
     end
 end
 ```
-
-## Usage
-
-To transit a struct into another state, you just need to call `Machinery.transition_to/2`
-
-### `Machinery.transition_to/2`
-It takes two arguments:
-
-- struct: The struct you want to transit to another state
-- next_event: An atom representing the next state you want the struct to transition to
-
-```elixir
-Machinery.transition_to(your_struct, :next_state)
-# {:ok, updated_struct}
-```
-
-### Example
-
-```elixir
-user = Accounts.get_user!(1)
-UserStateMachine.transition_to(user, :partial)
-```
-
-Guard functions, before and after callbacks will be checked automatically.
