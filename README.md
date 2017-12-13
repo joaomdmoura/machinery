@@ -7,9 +7,15 @@
 ![Machinery](https://github.com/joaomdmoura/machinery/blob/master/logo.png)
 
 Machinery is a State Machine library for structs in general that integrates with
-Pheonix out of the box.
-It also aims to have (when implemented with Phoenix) an optional build-in GUI
-that will represent each resource's state.
+Pheonix out of the box. It also aims to have (when implemented with Phoenix) an 
+optional build-in GUI that will represent each resource's state.
+
+It's just a thin layer that provides a DSL for declaring states 
+and having guard clauses + callbacks.
+
+### Do you always need a process to be a state machine?
+Yes? This is not your library. You might be better off with 
+another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
 
 Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 
