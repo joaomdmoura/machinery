@@ -6,12 +6,14 @@
 
 ![Machinery](https://github.com/joaomdmoura/machinery/blob/master/logo.png)
 
-Machinery is a State Machine library for structs in general that integrates with
-Pheonix out of the box. It also aims to have (when implemented with Phoenix) an 
-optional build-in GUI that will represent each resource's state.
+Machinery is a thin State Machine library that integrates with 
+Phoenix out of the box. 
 
-It's just a thin layer that provides a DSL for declaring states 
-and having guard clauses + callbacks.
+It's just a small layer that provides a DSL for declaring states 
+and having guard clauses + callbacks for structs in general.
+It also aims to have (when implemented with Phoenix) an optional 
+build-in GUI that will represent each resource's state.
+
 
 ### Do you always need a process to be a state machine?
 Yes? This is not your library. You might be better off with 
