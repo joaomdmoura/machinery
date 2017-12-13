@@ -1,9 +1,18 @@
 defmodule Machinery do
   @moduledoc """
-  Main Machinery module.
-  It keeps the bunk of the Machinery logics, it's the module that will be
+  This is the main Machinery module.
+
+  It keeps most of the Machinery logics, it's the module that will be
   imported with `use` on the module that the state machine will be implemented.
-  The first state declared will be considered the intial state
+
+  Declare the states as an argment when importing `Machinery` on the module that
+  will control your states transitions.
+
+
+  Machinery expects a `Keyword` as argument with two keys `states` and `transitions`.
+
+  - `states`: A List of Atoms representing each state.
+  - `transitions`: A Map for each state and it allowed next state(s).
 
   ## Parameters
 
@@ -13,8 +22,10 @@ defmodule Machinery do
 
   ## Example
     ```
-    defmodule Project.User do
+    defmodule YourProject.UserStateMachine do
       use Machinery,
+        # The first state declared will be considered
+        # the intial state
         states: [:created, :partial, :complete],
         transitions: %{
           created: [:partial, :complete],
@@ -33,7 +44,14 @@ defmodule Machinery do
   Main macro function that will be executed upon the load of the
   module using it.
 
-  It basically stores the states and transition
+  It basically stores the states and transitions.
+
+  It expects a `Keyword` as argument with two keys `states` and `transitions`.
+
+  - `states`: A List of Atoms representing each state.
+  - `transitions`: A Map for each state and it allowed next state(s).
+
+  P.S. The first state declared will be considered the intial state
   """
   defmacro __using__(opts) do
     states = Keyword.get(opts, :states)

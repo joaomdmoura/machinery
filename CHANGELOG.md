@@ -1,6 +1,7 @@
 # ChangeLog
 
 ## WIP Version
+- Improving docs
 
 ## 0.4.1
 - Updating wrong docs and README - [Pull Request](https://github.com/joaomdmoura/machinery/pull/5)
