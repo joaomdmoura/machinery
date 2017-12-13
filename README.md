@@ -19,7 +19,7 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 - [Guard Functions](#guard-functions)
 - [Before and After Callbacks](#before-and-after-callbacks)
 
-![gif example](https://i.imgur.com/DGJNznc.gif)
+![gif example](https://imgur.com/xR3D640.gif)
 
 
 ## Installing
