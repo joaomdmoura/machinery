@@ -1,25 +1,25 @@
 defmodule Machinery do
   @moduledoc """
   Main Machinery module.
-  It keeps the bunk of the Machinery logics, it's the module that
-  will be imported with `use` on the module that the state machine will
-  be implemented.
+  It keeps the bunk of the Machinery logics, it's the module that will be
+  imported with `use` on the module that the state machine will be implemented.
+  The first state declared will be considered the intial state
 
   ## Parameters
 
     - `opts`: A Keyword including `states` and `transitions`.
       - `states`: A List of Atoms representing each state.
-      - `transitions`: A List of Maps, including two keys `from` and `to`, `to` might be an Atom or a List of Atoms.
+      - `transitions`: A Map for each state and it allowed next state(s).
 
   ## Example
     ```
     defmodule Project.User do
       use Machinery,
         states: [:created, :partial, :complete],
-        transitions: [
-          %{from: :created, to: [:partial, :complete]},
-          %{from: :partal, to: :complete}
-        ]
+        transitions: %{
+          created: [:partial, :complete],
+          partial: :completed
+        }
     end
     ```
   """
@@ -54,9 +54,9 @@ defmodule Machinery do
   end
 
   @doc """
-  Triggers the transition of a struct to a new state if it passes the
+  Triggers the transition of a struct to a new state, if it passes any
   existing guard clause, also runs any before or after callbacks.
-  It returns a tuple with `{:ok, state}`, or `{:error, "cause"}`.
+  It returns a tuple with `{:ok, struct}`, or `{:error, "reason"}`.
 
   ## Parameters
 
