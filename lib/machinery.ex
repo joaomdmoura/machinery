@@ -8,7 +8,6 @@ defmodule Machinery do
   Declare the states as an argment when importing `Machinery` on the module that
   will control your states transitions.
 
-
   Machinery expects a `Keyword` as argument with two keys `states` and `transitions`.
 
   - `states`: A List of Atoms representing each state.
