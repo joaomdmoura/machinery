@@ -6,17 +6,17 @@
 
 ![Machinery](https://github.com/joaomdmoura/machinery/blob/master/logo.png)
 
-Machinery is a thin State Machine library that integrates with 
-Phoenix out of the box. 
+Machinery is a thin State Machine library that integrates with
+Phoenix out of the box.
 
-It's just a small layer that provides a DSL for declaring states 
+It's just a small layer that provides a DSL for declaring states
 and having guard clauses + callbacks for structs in general.
-It also aims to have (when implemented with Phoenix) an optional 
+It also aims to have (when implemented with Phoenix) an optional
 build-in GUI that will represent each resource's state.
 
 
 ### Do you always need a process to be a state machine?
-Yes? This is not your library. You might be better off with 
+Yes? This is not your library. You might be better off with
 another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
 
 Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
@@ -40,6 +40,27 @@ def deps do
   [
     {:machinery, "~> 0.4.1"}
   ]
+end
+```
+
+Make sure you have a field `state` declared as part of you struct, if it is a
+Phoenix model make sure you add it to the schema, as a string,  and to the changeset:
+
+```elixir
+defmodule YourProject.YouModule do
+  #...
+  schema "users" do
+    # ...
+    field :state, :string
+    # ...
+  end
+
+  def changeset(%User{} = user, attrs) do
+    #...
+    |> cast(attrs, [:name, state])
+    #...
+  end
+  #...
 end
 ```
 
