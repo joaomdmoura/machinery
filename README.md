@@ -43,12 +43,13 @@ def deps do
 end
 ```
 
-Make sure you have a field `state` declared as part of you struct, if it is a
-Phoenix model make sure you add it to the schema, as a string,  and to the changeset:
+Create a field `state` for the module you want to have a state machine,
+make sure you have declared it as part of you `defstruct`, or if it
+is a Phoenix model make sure you add it to the `schema`, as a `string`,  and
+to the `changeset/2`:
 
 ```elixir
 defmodule YourProject.YouModule do
-  #...
   schema "users" do
     # ...
     field :state, :string
@@ -57,10 +58,9 @@ defmodule YourProject.YouModule do
 
   def changeset(%User{} = user, attrs) do
     #...
-    |> cast(attrs, [:name, state])
+    |> cast(attrs, [:state])
     #...
   end
-  #...
 end
 ```
 
