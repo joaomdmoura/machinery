@@ -14,6 +14,14 @@ and having guard clauses + callbacks for structs in general.
 It also aims to have (when implemented with Phoenix) an optional
 build-in GUI that will represent each resource's state.
 
+
+## DISCLAMER
+
+Machinery is under heavy development, so the README may not match the
+released version, make sure you select the correct tag or the Docs for
+the version you are using.
+
+
 ### Do you always need a process to be a state machine?
 Yes? This is not your library. You might be better off with
 another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
