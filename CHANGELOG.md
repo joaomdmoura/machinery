@@ -2,6 +2,7 @@
 
 ## WIP Version
 - Improving docs
+- Updating DSl to Decouple Machinery from the struct itself - [Pull Request](https://github.com/joaomdmoura/machinery/pull/10)
 
 ## 0.4.1
 - Updating wrong docs and README - [Pull Request](https://github.com/joaomdmoura/machinery/pull/5)

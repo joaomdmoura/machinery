@@ -14,7 +14,6 @@ and having guard clauses + callbacks for structs in general.
 It also aims to have (when implemented with Phoenix) an optional
 build-in GUI that will represent each resource's state.
 
-
 ### Do you always need a process to be a state machine?
 Yes? This is not your library. You might be better off with
 another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
@@ -69,6 +68,10 @@ end
 Declare the states as an argment when importing `Machinery` on the module that
 will control your states transitions.
 
+It's strongly recommended that you create a new module for your State Machine
+logic. So let's say you want to add it to your `User` model, you should create a
+`UserStateMachine` module to hold your State Machine logic.
+
 Machinery expects a `Keyword` as argument with two keys `states` and `transitions`.
 
 - `states`: A List of Atoms representing each state.
@@ -91,18 +94,20 @@ end
 
 ## Changing States
 
-To transit a struct into another state, you just need to call `Machinery.transition_to/2`.
+To transit a struct into another state, you just need to
+call `Machinery.transition_to/3`.
 
-### `Machinery.transition_to/2`
-It takes two arguments:
+### `Machinery.transition_to/3`
+It takes three arguments:
 
 - `struct`: The `struct` you want to transit to another state.
-- `next_event`: An `atom` of the next state you want the struct to transition to.
+- `state_machine_module`: The module that holds the state machine logic, where Machinery as imported.
+- `next_event`: `atom` of the next state you want the struct to transition to.
 
 **Guard functions, before and after callbacks will be checked automatically.**
 
 ```elixir
-Machinery.transition_to(your_struct, :next_state)
+Machinery.transition_to(your_struct, YourStateMachine, :next_state)
 # {:ok, updated_struct}
 ```
 
@@ -110,7 +115,7 @@ Machinery.transition_to(your_struct, :next_state)
 
 ```elixir
 user = Accounts.get_user!(1)
-UserStateMachine.transition_to(user, :partial)
+UserStateMachine.transition_to(user, UserStateMachine, :complete)
 ```
 
 ## Guard functions

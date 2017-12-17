@@ -3,10 +3,10 @@ defmodule Machinery do
   This is the main Machinery module.
 
   It keeps most of the Machinery logics, it's the module that will be
-  imported with `use` on the module that the state machine will be implemented.
+  imported with `use` on the module responsible for the state machine.
 
-  Declare the states as an argment when importing `Machinery` on the module that
-  will control your states transitions.
+  Declare the states as an argument when importing `Machinery` on the module
+  that will control your states transitions.
 
   Machinery expects a `Keyword` as argument with two keys `states` and `transitions`.
 
@@ -71,25 +71,26 @@ defmodule Machinery do
   end
 
   @doc """
-  Triggers the transition of a struct to a new state, if it passes any
-  existing guard clause, also runs any before or after callbacks.
-  It returns a tuple with `{:ok, struct}`, or `{:error, "reason"}`.
+  Triggers the transition of a struct to a new state, accordinly to a specific
+  state machine module, if it passes any existing guard functions.
+  It also runs any before or after callbacks and returns a tuple with
+  `{:ok, struct}`, or `{:error, "reason"}`.
 
   ## Parameters
 
-    - `struct`: A Struct based on a module using Machinery.
+    - `struct`: The `struct` you want to transit to another state.
+    - `state_machine_module`: The module that holds the state machine logic, where Machinery as imported.
     - `next_state`: Atom of the next state you want to transition to.
 
   ## Examples
 
-      Machinery.transition_to(%User{state: :partial}, :completed)
+      Machinery.transition_to(%User{state: :partial}, UserStateMachine, :completed)
       {:ok, %User{state: :completed}}
   """
-  @spec transition_to(struct, atom) :: {:ok, struct} | {:error, String.t}
-  def transition_to(struct, next_state) do
-    module = struct.__struct__
-    initial_state = module._machinery_initial_state()
-    transitions = module._machinery_transitions()
+  @spec transition_to(struct, module, atom) :: {:ok, struct} | {:error, String.t}
+  def transition_to(struct, state_machine_module, next_state) do
+    initial_state = state_machine_module._machinery_initial_state()
+    transitions = state_machine_module._machinery_transitions()
 
     # Getting current state of the struct of falling back to the
     # first declared state on the struct model.
@@ -104,14 +105,14 @@ defmodule Machinery do
       !Transition.declared_transition?(transitions, current_state, next_state) ->
         {:error, @not_declated_error}
 
-      !Transition.guarded_transition?(module, struct, next_state) ->
+      !Transition.guarded_transition?(state_machine_module, struct, next_state) ->
         {:error, @guarded_error}
 
       true ->
         struct = struct
-          |> Transition.before_callbacks(next_state, module)
+          |> Transition.before_callbacks(next_state, state_machine_module)
           |> Map.put(:state, next_state)
-          |> Transition.after_callbacks(next_state, module)
+          |> Transition.after_callbacks(next_state, state_machine_module)
         {:ok, struct}
     end
   end
