@@ -78,7 +78,7 @@ defmodule Machinery do
 
   ## Parameters
 
-    - `struct`: The desired struct you want to transit.
+    - `struct`: The `struct` you want to transit to another state.
     - `state_machine_module`: The module that holds the state machine logic, where Machinery as imported.
     - `next_state`: Atom of the next state you want to transition to.
 
