@@ -31,6 +31,7 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 - [Installing](#installing)
 - [Declaring States](#declaring-states)
 - [Changing States](#changing-states)
+- [Persist State](#persist-state)
 - [Guard Functions](#guard-functions)
 - [Before and After Callbacks](#before-and-after-callbacks)
 
@@ -126,12 +127,48 @@ user = Accounts.get_user!(1)
 UserStateMachine.transition_to(user, UserStateMachine, :complete)
 ```
 
-## Guard functions
-Create guard conditions by adding signatures of the `guard_transition/2`
-function, pattern matching the desired state you want to guard.
+## Persist State
+To persist the struct and the state transition automatically, instead of having
+Mahcinery changing the struct itself, you can declare a `persist/2` function on
+the state machine module.
+
+It will receive the unchaged `struct` as the first argument and a `string` of the
+next state as the second one, after every state transition. That will be called
+between the before and after transition callbacks.
+
+**`persist/2` should always return the updated struct.**
+
+### Example:
 
 ```elixir
-def guard_transition(struct, :state), do: true
+defmodule YourProject.UserStateMachine do
+  alias YourProject.Accounts
+
+  use Machinery,
+    states: [:created, :complete],
+    transitions: %{created: :complete}
+
+  # `next_state` in this case will be a string not an atom.
+  def persist(struct, next_state) do
+    # Updating a user on the database with the new state.
+    {:ok, user} = Accounts.update_user(struct, %{state: next_state})
+    user
+  end
+end
+```
+
+## Guard functions
+Create guard conditions by adding signatures of the `guard_transition/2`
+function, it will receive two arguments, the `struct` and an `atom` of the state
+it will transit to, use this second argument to pattern matching the desired
+state you want to guard.
+
+```elixir
+# The second argument is used to pattern match into the state
+# and guard the transition to it
+def guard_transition(struct, :guarded_state) do
+ # Your guard logic here
+end
 ```
 
 Guard conditions should return a boolean:

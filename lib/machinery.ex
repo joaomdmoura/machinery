@@ -96,7 +96,7 @@ defmodule Machinery do
     # first declared state on the struct model.
     current_state = case Map.get(struct, :state) do
       nil -> initial_state
-      current_state -> current_state
+      current_state -> String.to_atom(current_state)
     end
 
     # Checking declared transitions and guard functions before
@@ -111,7 +111,7 @@ defmodule Machinery do
       true ->
         struct = struct
           |> Transition.before_callbacks(next_state, state_machine_module)
-          |> Map.put(:state, next_state)
+          |> Transition.persist_struct(Atom.to_string(next_state), state_machine_module)
           |> Transition.after_callbacks(next_state, state_machine_module)
         {:ok, struct}
     end
