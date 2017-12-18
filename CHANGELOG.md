@@ -1,6 +1,9 @@
 # ChangeLog
 
 ## WIP Version
+
+
+## 0.7.0
 - Improving docs
 - Updating DSl to Decouple Machinery from the struct itself - [Pull Request](https://github.com/joaomdmoura/machinery/pull/10)
 - Adding support for automatic persistence - [Pull Request](https://github.com/joaomdmoura/machinery/pull/11)
