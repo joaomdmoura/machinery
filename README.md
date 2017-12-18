@@ -83,7 +83,7 @@ logic. So let's say you want to add it to your `User` model, you should create a
 
 Machinery expects a `Keyword` as argument with two keys `states` and `transitions`.
 
-- `states`: A List of Atoms representing each state.
+- `states`: A List of Strings representing each state.
 - `transitions`: A Map for each state and it allowed next state(s).
 
 ### Example
@@ -93,10 +93,10 @@ defmodule YourProject.UserStateMachine do
   use Machinery,
     # The first state declared will be considered
     # the intial state
-    states: [:created, :partial, :complete],
+    states: ["created", "partial", "complete"],
     transitions: %{
-      created: [:partial, :complete],
-      partial: :completed
+      "created" =>  ["partial", "complete"],
+      "partial" => "completed"
     }
 end
 ```
@@ -111,12 +111,12 @@ It takes three arguments:
 
 - `struct`: The `struct` you want to transit to another state.
 - `state_machine_module`: The module that holds the state machine logic, where Machinery as imported.
-- `next_event`: `atom` of the next state you want the struct to transition to.
+- `next_event`: `string` of the next state you want the struct to transition to.
 
 **Guard functions, before and after callbacks will be checked automatically.**
 
 ```elixir
-Machinery.transition_to(your_struct, YourStateMachine, :next_state)
+Machinery.transition_to(your_struct, YourStateMachine, "next_state")
 # {:ok, updated_struct}
 ```
 
@@ -124,7 +124,7 @@ Machinery.transition_to(your_struct, YourStateMachine, :next_state)
 
 ```elixir
 user = Accounts.get_user!(1)
-UserStateMachine.transition_to(user, UserStateMachine, :complete)
+UserStateMachine.transition_to(user, UserStateMachine, "complete")
 ```
 
 ## Persist State
@@ -145,10 +145,9 @@ defmodule YourProject.UserStateMachine do
   alias YourProject.Accounts
 
   use Machinery,
-    states: [:created, :complete],
-    transitions: %{created: :complete}
+    states: ["created", "complete"],
+    transitions: %{"created" => "complete}
 
-  # `next_state` in this case will be a string not an atom.
   def persist(struct, next_state) do
     # Updating a user on the database with the new state.
     {:ok, user} = Accounts.update_user(struct, %{state: next_state})
@@ -159,14 +158,14 @@ end
 
 ## Guard functions
 Create guard conditions by adding signatures of the `guard_transition/2`
-function, it will receive two arguments, the `struct` and an `atom` of the state
-it will transit to, use this second argument to pattern matching the desired
-state you want to guard.
+function, it will receive two arguments, the `struct` and an `string` of the
+state it will transit to, use this second argument to pattern matching the
+desired state you want to guard.
 
 ```elixir
 # The second argument is used to pattern match into the state
 # and guard the transition to it
-def guard_transition(struct, :guarded_state) do
+def guard_transition(struct, "guarded_state") do
  # Your guard logic here
 end
 ```
@@ -180,12 +179,12 @@ Guard conditions should return a boolean:
 ```elixir
 defmodule YourProject.UserStateMachine do
   use Machinery,
-    states: [:created, :complete],
-    transitions: %{created: :complete}
+    states: ["created", "complete"],
+    transitions: %{"created" => "complete}
 
-  # Guard the transition to the :complete state.
-  def guard_transition(struct, :complete) do
-   Map.get(struct, :missing_fields) == false
+  # Guard the transition to the "complete" state.
+  def guard_transition(struct, "complete") do
+    Map.get(struct, :missing_fields) == false
   end
 end
 ```
@@ -195,15 +194,15 @@ end
 You can also use before and after callbacks to handle desired side effects and
 reactions to a specific state transition.
 
-You can just declare `before_transition/2` and `  after_transition/2`,
+You can just declare `before_transition/2` and `after_transition/2`,
 pattern matching the desired state you want to.
 
 **Make sure Before and After callbacks should return the struct.**
 
 ```elixir
 # callbacks should always return the struct.
-def before_transition(struct, :state), do: struct
-def after_transition(struct, :state), do: struct
+def before_transition(struct, "state"), do: struct
+def after_transition(struct, "state"), do: struct
 ```
 
 ### Example:
@@ -211,18 +210,18 @@ def after_transition(struct, :state), do: struct
 ```elixir
 defmodule YourProject.UserStateMachine do
   use Machinery,
-    states: [:created, :partial, :complete],
+    states: ["created", "partial", "complete"],
     transitions: %{
-      created: [:partial, :complete],
-      partial: :completed
+      "created" =>  ["partial", "complete"],
+      "partial" => "completed"
     }
 
-    def before_transition(struct, :partial) do
+    def before_transition(struct, "partial") do
       # ... overall desired side effects
       struct
     end
 
-    def after_transition(struct, :completed) do
+    def after_transition(struct, "completed") do
       # ... overall desired side effects
       struct
     end
