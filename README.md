@@ -27,9 +27,6 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 - [Guard Functions](#guard-functions)
 - [Before and After Callbacks](#before-and-after-callbacks)
 
-![gif example](https://imgur.com/xR3D640.gif)
-
-
 ## Installing
 
 The package can be installed by adding `machinery` to your list of
