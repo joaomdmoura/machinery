@@ -1,6 +1,8 @@
 defmodule Machinery.Mixfile do
   use Mix.Project
 
+  @default_config [http: [port: 4000], server: false]
+
   def project do
     [
       app: :machinery,
@@ -8,6 +10,7 @@ defmodule Machinery.Mixfile do
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       deps: deps(),
+      compilers: [:phoenix] ++ Mix.compilers,
       description: description(),
       package: package(),
       source_url: "https://github.com/joaomdmoura/machinery",
@@ -22,14 +25,17 @@ defmodule Machinery.Mixfile do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [
-      extra_applications: [:logger]
-    ]
+    [mod: {Machinery, []},
+     env: [{Machinery.Endpoint, @default_config}],
+     applications: [:phoenix, :phoenix_html, :cowboy]]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:phoenix, "~> 1.3.0"},
+      {:phoenix_html, "~> 2.6"},
+      {:cowboy, "~> 1.0"},
       {:excoveralls, "~> 0.7", only: :test},
       {:ex_doc, "~> 0.18", only: :dev, runtime: false}
     ]

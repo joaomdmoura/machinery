@@ -28,3 +28,14 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+config :machinery, Machinery.Endpoint,
+  url: [host: "localhost"],
+  root: Path.dirname(__DIR__),
+  render_errors: [accepts: ~w(html)],
+  http: [port: 4000],
+  debug_errors: true,
+  code_reloader: true,
+  cache_static_lookup: false,
+  check_origin: false,
+  server: true

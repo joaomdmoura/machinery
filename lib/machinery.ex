@@ -67,6 +67,15 @@ defmodule Machinery do
     end
   end
 
+  @doc false
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+    :ets.new(:machinery_session, [:named_table, :public, read_concurrency: true])
+    children = [supervisor(Machinery.Endpoint, [])]
+    opts = [strategy: :one_for_one, name: Machinery.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+
   @doc """
   Triggers the transition of a struct to a new state, accordinly to a specific
   state machine module, if it passes any existing guard functions.
