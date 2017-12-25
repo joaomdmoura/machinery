@@ -1,7 +1,7 @@
 defmodule Machinery.Mixfile do
   use Mix.Project
 
-  @default_config [http: [port: 4000], server: false]
+  @default_config [http: [port: 4000], server: false, url: [path: "/machinery"]]
 
   def project do
     [
@@ -52,7 +52,6 @@ defmodule Machinery.Mixfile do
       maintainers: ["João M. D. Moura"],
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/joaomdmoura/machinery"},
-      files: ["lib", "web",  "mix.exs", "README*", "LICENSE*"]
     ]
   end
 end

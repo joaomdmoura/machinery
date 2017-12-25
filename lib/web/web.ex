@@ -1,19 +1,7 @@
 defmodule Machinery.Web do
   @moduledoc """
   A module that keeps using definitions for controllers,
-  views and so on.
-
-  This can be used in your application as:
-
-      use Machinery.Web, :controller
-      use Machinery.Web, :view
-
-  The definitions below will be executed for every view,
-  controller, etc, so keep them short and clean, focused
-  on imports, uses and aliases.
-
-  Do NOT define functions inside the quoted expressions
-  below.
+  views, models and routes
   """
 
   def model do
@@ -43,12 +31,6 @@ defmodule Machinery.Web do
   def router do
     quote do
       use Phoenix.Router
-    end
-  end
-
-  def channel do
-    quote do
-      use Phoenix.Channel
     end
   end
 

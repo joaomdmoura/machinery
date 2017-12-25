@@ -67,7 +67,10 @@ defmodule Machinery do
     end
   end
 
-  @doc false
+  @doc """
+  Start method that will trigger a supervisor for the Machinery.Endpoint,
+  a module that uses Phoenix.Endpoint to expose new routes related to Machinery.
+  """
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
     :ets.new(:machinery_session, [:named_table, :public, read_concurrency: true])
