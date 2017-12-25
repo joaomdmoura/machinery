@@ -1,8 +1,10 @@
-<div id="graph" class="graph">
-</div>
+<h1>Machinery Dashboard</h1>
 
-<div class="summary-stats container-fluid">
-  <div class="row">
-    LOL
-  </div>
+<h3>Declared States</h3>
+<p>There are X declared states.</p>
+
+<div class="row">
+  <div class="col-md-4">.col-md-4</div>
+  <div class="col-md-4">.col-md-4</div>
+  <div class="col-md-4">.col-md-4</div>
 </div>

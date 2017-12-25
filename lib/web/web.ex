@@ -25,6 +25,7 @@ defmodule Machinery.Web do
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
+      import Machinery.Router.Helpers
     end
   end
 

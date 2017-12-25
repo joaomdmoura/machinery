@@ -7,11 +7,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Machinery Dashboard</title>
+    <link rel="stylesheet" href="<%= static_path(@conn, "/machinery/css/app.css") %>">
   </head>
 
   <body>
     <div class="container">
       <%= render @view_module, @view_template, assigns %>
     </div>
+    <script src="<%= static_path(@conn, "/machinery/js/app.js") %>"></script>
   </body>
 </html>
