@@ -1,0 +1,25 @@
+# This configuration was used Ebert to review the joaomdmoura/machinery repository
+# on 56a7e3e2edce2b0c0c4f8fb2746183a5bc8a3cf1.
+# You can make this the default configuration for future reviews by moving this
+# file to your repository as `.ebert.yml` and pushing it to GitHub, and tweak
+# it as you wish - To know more on how to change this file to better review your
+# repository you can go to https://docs.ebertapp.io/configuration and see the configuration
+# details.
+---
+styleguide: plataformatec/linters
+engines:
+  credo:
+    enabled: true
+  fixme:
+    enabled: true
+  eslint:
+    enabled: true
+  csslint:
+    enabled: false
+  remark-lint:
+    enabled: true
+exclude_paths:
+- config
+- test
+- lib/web/static/vendor/**/*
+

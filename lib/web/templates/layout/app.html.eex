@@ -19,7 +19,7 @@
           <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
             <span class="oi oi-menu" title="menu" aria-hidden="true"></span>
           </button>
-          <div class='navbar-collapse collapse'>
+          <div class='navbar-collapse collapse' id="collapsibleNavbar">
             <ul class="nav nav-pills flex-column">
               <li class="nav-item">
                 <%= link("Overview", to: page_path(@conn, :index), class: "nav-link active") %>
