@@ -1,32 +1,123 @@
 /* This file is for your main application css. */
 body {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  font-family: 'Roboto', sans-serif;
 }
 
-div.container {
-  max-width: 100%;
-}
+h1 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 900; }
+
+h2 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 400; }
 
 h3 {
-  margin-top: 2rem;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 400; }
+
+h4 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 400; }
+
+h5 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  letter-spacing: .1rem;
+  font-weight: 900;
+  text-transform: uppercase; }
+
+h6 {
+  font-family: 'Roboto', sans-serif;
+  font-size: .8rem;
+  letter-spacing: .1rem;
+  font-weight: 400;
+  text-transform: uppercase; }
+
+nav.sidebar {
+  border-right: 1px solid #eee;
+  background: #6063bb;
 }
 
-.row {
-  margin-bottom: 1rem;
-}
-.row .row {
-  margin-top: 1rem;
-  margin-bottom: 0;
-}
-[class*="col-"] {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  background-color: rgba(86,61,124,.15);
-  border: 1px solid rgba(86,61,124,.2);
+a, a:hover, a:active {
+  color: #fff;
+  text-decoration: none;
 }
 
-hr {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+.nav-pills .nav-link {
+  color: #fff;
+}
+.nav-pills .nav-link.active, .nav-pills .nav-link:hover, .nav-pills .show>.nav-link  {
+  background-color: #5354aa !important;
+}
+
+.sidebar .site-title {
+  margin-top: .5rem;
+  margin-bottom: 1.75rem;
+}
+
+.sidebar h1 {
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  padding: 0rem 1rem;
+  text-transform: uppercase;
+  letter-spacing: .2rem;
+}
+
+div.spaced {
+  margin-top: 25px;
+}
+
+.colored {
+  color: #666;
+}
+
+div.filled {
+  padding: 15px 15px;
+  background-color: rgb(241, 239, 239);
+  border-radius: .3rem;
+  margin: 0px 10px;
+}
+
+nav.topbar {
+  position: fixed;
+  top:0;
+  left: 0;
+  z-index: 1000;
+  overflow-x: hidden;
+  background: #6063bb;
+  border-bottom: 1px solid #eee;
+}
+
+@media screen and (min-width: 480px) {
+  nav.topbar {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  main {
+    top: 60px;
+  }
+}
+
+.topbar h1 {
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  padding: 15px 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: .2rem;
+}
+
+.oi {
+  color: #fff;
+}
+
+.resource-item {
+  cursor: pointer;
 }
