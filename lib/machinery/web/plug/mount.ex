@@ -1,4 +1,9 @@
-defmodule Machinery.Plug.Mount do
+defmodule Machinery.Plug do
+  @moduledoc """
+  This Plug module is the entry point for the Machinery Dashboard.
+  It's supposed to be used on the Endpoint of a Phoenix application,
+  and it's responsible to call the Machinery.Endpoint.
+  """
   import Plug.Conn
 
   def init(default), do: default
@@ -22,7 +27,9 @@ defmodule Machinery.Plug.Mount do
   end
 
   defp path_segments(path) do
-    String.split(path, "/") |> Enum.reject(fn(x)-> x == "" end)
+    path
+      |> String.split("/")
+      |> Enum.reject(fn(x) -> x == "" end)
   end
 
   defp matches?(conn, path) do
@@ -30,6 +37,6 @@ defmodule Machinery.Plug.Mount do
   end
 
   defp forward(conn, path) do
-    conn |> Phoenix.Router.Route.forward(path_segments(path), Machinery.Endpoint,[])
+    Phoenix.Router.Route.forward(conn, path_segments(path), Machinery.Endpoint, [])
   end
 end

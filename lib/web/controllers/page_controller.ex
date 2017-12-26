@@ -8,7 +8,7 @@ defmodule Machinery.PageController do
     machinery_module = conn.assigns.module
 
     states = machinery_module._machinery_states()
-    |> Enum.map(fn(state) ->
+    states_and_resources = Enum.map(states, fn(state) ->
       query = from resource in model,
          where: resource.state == ^state,
          select: resource
@@ -20,7 +20,7 @@ defmodule Machinery.PageController do
       |> List.last
 
     conn
-      |> assign(:states, states)
+      |> assign(:states, states_and_resources)
       |> assign(:friendly_module_name, friendly_module_name)
       |> render("index.html")
   end
