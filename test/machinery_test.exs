@@ -104,6 +104,7 @@ defmodule MachineryTest do
     assert {:ok, %TestStruct{state: "completed"}} = Machinery.transition_to(struct, TestStateMachine, "completed")
   end
 
+  @tag :capture_log
   test "Implict rescue on the guard clause internals should raise any other excepetion not strictly related to missing guard_tranistion/2 existence" do
     wrong_struct = %TestStruct{state: "created", force_exception: true}
     assert_raise UndefinedFunctionError, fn() ->
@@ -122,6 +123,7 @@ defmodule MachineryTest do
     assert completed_struct.missing_fields == false
   end
 
+  @tag :capture_log
   test "Implict rescue on the callbacks internals should raise any other excepetion not strictly related to missing callbacks_fallback/2 existence" do
     wrong_struct = %TestStruct{state: "created", force_exception: true}
     assert_raise UndefinedFunctionError, fn() ->
@@ -134,6 +136,7 @@ defmodule MachineryTest do
     assert {:ok, _} = Machinery.transition_to(struct, TestStateMachine, "completed")
   end
 
+  @tag :capture_log
   test "Persist function should still reaise errors if not related to the existence of persist/1 method" do
     wrong_struct = %TestStruct{state: "created", force_exception: true}
     assert_raise UndefinedFunctionError, fn() ->
