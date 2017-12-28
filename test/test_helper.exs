@@ -4,6 +4,7 @@ ExUnit.start()
 Code.load_file("test/support/test_struct.exs")
 Code.load_file("test/support/test_state_machine.exs")
 Code.load_file("test/support/test_state_machine_with_guard.exs")
+Code.load_file("test/support/test_repo.exs")
 
 defmodule MachineryTest.Helper do
   def restart_machinery() do
@@ -12,8 +13,4 @@ defmodule MachineryTest.Helper do
     :timer.sleep(100)
     Application.start(:machinery)
   end
-end
-
-defmodule MachineryTest.TestRepo do
-  def all(_), do: []
 end

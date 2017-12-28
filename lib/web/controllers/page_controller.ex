@@ -15,7 +15,7 @@ defmodule Machinery.PageController do
       %{name: state, resources: repo.all(query)}
     end)
 
-    friendly_module_name = to_string(machinery_module)
+    friendly_module_name = to_string(model)
       |> String.split(".")
       |> List.last
 
