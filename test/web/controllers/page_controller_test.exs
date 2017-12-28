@@ -1,29 +1,13 @@
 defmodule MachineryTest.PageControllerTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Plug.Test
-  import ExUnit.CaptureLog
 
   alias MachineryTest.TestStateMachine
-  alias MachineryTest.TestStruct
   alias MachineryTest.TestRepo
   alias MachineryTest.Helper
 
   setup_all do
-    Application.put_env(:machinery, :module, TestStateMachine)
-    Application.put_env(:machinery, :model, TestStruct)
-    Application.put_env(:machinery, :repo, TestRepo)
-    Application.put_env(:machinery, :interface, true)
-    capture_log fn ->
-      Helper.restart_machinery()
-    end
-    :ok
-  end
-
-  @tag :capture_log
-  test "Dasboard should be accessible if `interface` is set as true" do
-    conn = Machinery.Plug.call(conn(:get, "/"), "/")
-    assert conn.state == :sent
-    assert conn.status == 200
+    Helper.mahcinery_interface()
   end
 
   @tag :capture_log

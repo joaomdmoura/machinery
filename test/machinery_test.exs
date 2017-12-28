@@ -2,6 +2,7 @@ defmodule MachineryTest do
   use ExUnit.Case, async: false
   doctest Machinery
 
+  alias MachineryTest.Helper
   alias MachineryTest.TestStruct
   alias MachineryTest.TestStateMachine
   alias MachineryTest.TestStateMachineWithGuard
@@ -96,10 +97,8 @@ defmodule MachineryTest do
 
   @tag :capture_log
   test "Machinery.Endpoint should be started under the Machinery.Supervisor if env var `interface` is set to true" do
-    Application.put_env(:machinery, :interface, true)
-    MachineryTest.Helper.restart_machinery()
+    Helper.mahcinery_interface()
     endpoint_pid = Process.whereis(Machinery.Endpoint)
     assert Process.alive?(endpoint_pid)
-    Application.put_env(:machinery, :interface, false)
   end
 end
