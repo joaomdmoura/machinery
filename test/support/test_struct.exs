@@ -11,7 +11,6 @@ defmodule MachineryTest.TestStruct do
 
   @doc false
   def changeset(test_struct, attrs) do
-    test_struct
-    |> cast(attrs, [:state, :missing_fields, :force_exception])
+    cast(test_struct, attrs, [:state, :missing_fields, :force_exception])
   end
 end

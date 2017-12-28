@@ -16,10 +16,16 @@ defmodule MachineryTest.PageControllerTest do
 
   @tag :capture_log
   test "Dasboard should be accessible if `interface` is set as true" do
-    conn = conn(:get, "/")
-    |> Machinery.Plug.call("/")
+    conn = Machinery.Plug.call(conn(:get, "/"), "/")
 
     assert conn.state == :sent
     assert conn.status == 200
+  end
+
+  @tag :capture_log
+  test "A request to an unexpect route should still result into an error" do
+    assert_raise Phoenix.Router.NoRouteError, fn() ->
+      Machinery.Plug.call(conn(:get, "/wrong-route"), "/")
+    end
   end
 end
