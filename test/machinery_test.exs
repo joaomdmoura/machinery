@@ -97,16 +97,9 @@ defmodule MachineryTest do
   @tag :capture_log
   test "Machinery.Endpoint should be started under the Machinery.Supervisor if env var `interface` is set to true" do
     Application.put_env(:machinery, :interface, true)
-    restart_machinery()
+    MachineryTest.Helper.restart_machinery()
     endpoint_pid = Process.whereis(Machinery.Endpoint)
     assert Process.alive?(endpoint_pid)
     Application.put_env(:machinery, :interface, false)
-  end
-
-  defp restart_machinery() do
-    supervisor_pid = Process.whereis(Machinery.Supervisor)
-    Process.exit(supervisor_pid, :kill)
-    :timer.sleep(100)
-    Application.start(:machinery)
   end
 end
