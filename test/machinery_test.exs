@@ -1,66 +1,10 @@
 defmodule MachineryTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   doctest Machinery
 
   alias MachineryTest.TestStruct
   alias MachineryTest.TestStateMachine
   alias MachineryTest.TestStateMachineWithGuard
-
-  defmodule TestStruct do
-    defstruct state: nil, missing_fields: nil, force_exception: false
-  end
-
-  defmodule TestStateMachineWithGuard do
-    use Machinery,
-      states: ["created", "partial", "completed"],
-      transitions: %{
-        "created" => ["partial", "completed"],
-        "partial" => "completed"
-      }
-
-    def guard_transition(struct, "completed") do
-      # Code to simulate and force an exception inside a
-      # guard function.
-      if Map.get(struct, :force_exception) do
-        Machinery.non_existing_function_should_raise_error()
-      end
-
-      Map.get(struct, :missing_fields) == false
-    end
-  end
-
-  defmodule TestStateMachine do
-    use Machinery,
-      states: ["created", "partial", "completed"],
-      transitions: %{
-        "created" => ["partial", "completed"],
-        "partial" => "completed"
-      }
-
-    def before_transition(struct, "partial") do
-      # Code to simulate and force an exception inside a
-      # guard function.
-      if Map.get(struct, :force_exception) do
-        Machinery.non_existing_function_should_raise_error()
-      end
-
-      Map.put(struct, :missing_fields, true)
-    end
-
-    def after_transition(struct, "completed") do
-      Map.put(struct, :missing_fields, false)
-    end
-
-    def persist(struct, next_state) do
-      # Code to simulate and force an exception inside a
-      # guard function.
-      if Map.get(struct, :force_exception) do
-        Machinery.non_existing_function_should_raise_error()
-      end
-
-      Map.put(struct, :state, next_state)
-    end
-  end
 
   test "All internal functions should be injected into AST" do
     assert :erlang.function_exported(TestStateMachine, :_machinery_initial_state, 0)
@@ -142,5 +86,27 @@ defmodule MachineryTest do
     assert_raise UndefinedFunctionError, fn() ->
       Machinery.transition_to(wrong_struct, TestStateMachine, "completed")
     end
+  end
+
+  @tag :capture_log
+  test "Machinery.Transitions GenServer should be started under the Machinery.Supervisor" do
+    transitions_pid = Process.whereis(Machinery.Transitions)
+    assert Process.alive?(transitions_pid)
+  end
+
+  @tag :capture_log
+  test "Machinery.Endpoint should be started under the Machinery.Supervisor if env var `interface` is set to true" do
+    Application.put_env(:machinery, :interface, true)
+    restart_machinery()
+    endpoint_pid = Process.whereis(Machinery.Endpoint)
+    assert Process.alive?(endpoint_pid)
+    Application.put_env(:machinery, :interface, false)
+  end
+
+  defp restart_machinery() do
+    supervisor_pid = Process.whereis(Machinery.Supervisor)
+    Process.exit(supervisor_pid, :kill)
+    :timer.sleep(100)
+    Application.start(:machinery)
   end
 end

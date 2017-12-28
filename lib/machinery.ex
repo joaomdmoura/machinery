@@ -63,8 +63,10 @@ defmodule Machinery do
   end
 
   @doc """
-  Start method that will trigger a supervisor for the Machinery.Endpoint,
-  a module that uses Phoenix.Endpoint to expose new routes related to Machinery.
+  Start function that will trigger a supervisor for the Machinery.Transitions, a
+  GenServer that controls the state transitions and also starts another process,
+  if the `interface` config is set to `true, for Machinery.Endpoint, a module
+  that uses Phoenix.Endpoint to expose new routes related to Machinery.
   """
   def start(_type, _args) do
     children = if Application.get_env(:machinery, :interface) do
@@ -74,8 +76,8 @@ defmodule Machinery do
     else
       []
     end
-    children = [{Machinery.Transitions, name: Machinery.Transitions} | children]
 
+    children = [{Machinery.Transitions, name: Machinery.Transitions} | children]
     opts = [strategy: :one_for_one, name: Machinery.Supervisor]
     Supervisor.start_link(children, opts)
   end
