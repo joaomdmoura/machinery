@@ -1,4 +1,4 @@
-defmodule MachineryTest.PageControllerTest do
+defmodule MachineryTest.ResourceControllerTest do
   use ExUnit.Case, async: false
   use Plug.Test
 

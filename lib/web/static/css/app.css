@@ -39,6 +39,29 @@ nav.topbar {
   z-index: 1000;
 }
 
+ul li.resource-item:hover {
+  background-color: #e6e7f8;
+}
+
+div.col.filled {
+  height: 85vh;
+  min-height: 700px;
+  overflow: hidden;
+}
+
+div.col.filled div.holder-limiter {
+  overflow: hidden;
+  height: 96%;
+  border-radius: 5px;
+}
+
+div.col.filled div.holder {
+  overflow: scroll;
+  border: 1px solid #ddd;
+  height: 96%;
+  border-radius: 5px;
+}
+
 @media screen and (min-width: 480px) {
   nav.topbar { display: none; }
 }

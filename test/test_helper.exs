@@ -29,7 +29,7 @@ defmodule MachineryTest.Helper do
   def restart_machinery() do
     supervisor_pid = Process.whereis(Machinery.Supervisor)
     Process.exit(supervisor_pid, :kill)
-    :timer.sleep(100)
+    :timer.sleep(300)
     Application.start(:machinery)
   end
 end

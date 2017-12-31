@@ -15,23 +15,23 @@
     <div class="container-fluid">
       <div class="row">
         <nav class="navbar navbar-expand-md fixed-top topbar">
-          <h1 class="site-title"><%= link("Machinery", to: page_path(@conn, :index))%></h1>
+          <h1 class="site-title"><%= link("Machinery", to: resource_path(@conn, :index))%></h1>
           <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
             <span class="oi oi-menu" title="menu" aria-hidden="true"></span>
           </button>
           <div class='navbar-collapse collapse' id="collapsibleNavbar">
             <ul class="nav nav-pills flex-column">
               <li class="nav-item">
-                <%= link("Overview", to: page_path(@conn, :index), class: "nav-link active") %>
+                <%= link("Overview", to: resource_path(@conn, :index), class: "nav-link active") %>
               </li>
             </ul>
           </div>
         </nav>
         <nav class="col-sm-2 col-md-2 d-none d-sm-block sidebar">
-          <h1 class="site-title"><%= link("Machinery", to: page_path(@conn, :index))%></h1>
+          <h1 class="site-title"><%= link("Machinery", to: resource_path(@conn, :index))%></h1>
           <ul class="nav nav-pills flex-column">
             <li class="nav-item">
-              <%= link("Overview", to: page_path(@conn, :index), class: "nav-link active") %>
+              <%= link("Overview", to: resource_path(@conn, :index), class: "nav-link active") %>
             </li>
           </ul>
         </nav>

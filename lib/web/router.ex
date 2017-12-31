@@ -9,8 +9,17 @@ defmodule Machinery.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :api do
+    plug :accepts, ["json"]
+  end
+
   scope "/", Machinery do
     pipe_through :browser
-    get "/", PageController, :index
+    get "/", ResourceController, :index
+  end
+
+  scope "/api", Machinery do
+    pipe_through :api
+    get "/:state/resources/:page", ResourceController, :index
   end
 end
