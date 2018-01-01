@@ -28,8 +28,12 @@ defmodule MachineryTest.Helper do
   @doc false
   def restart_machinery() do
     supervisor_pid = Process.whereis(Machinery.Supervisor)
+    Process.monitor(supervisor_pid)
     Process.exit(supervisor_pid, :kill)
-    :timer.sleep(300)
-    Application.start(:machinery)
+    receive do
+      _ ->
+        :timer.sleep(1000)
+        Application.start(:machinery)
+    end
   end
 end

@@ -37,4 +37,28 @@ defmodule MachineryTest.ResourceControllerTest do
       Machinery.Plug.call(conn(:get, "/wrong-route"), "/")
     end
   end
+
+  @tag :capture_log
+  test "index/2 should also respond to /api requests returning json" do
+    state = List.first(TestStateMachine._machinery_states())
+    page = 1
+    conn = Machinery.Plug.call(conn(:get, "/machinery/api/#{state}/resources/#{page}"), [])
+    resources_maps = Enum.map(TestRepo.all(nil), &stringify_keys/1)
+    assert Poison.decode!(conn.resp_body) == resources_maps
+  end
+
+  @tag :capture_log
+  test "index/2 api should paginate correctly" do
+    state = List.first(TestStateMachine._machinery_states())
+    page = 2
+    conn = Machinery.Plug.call(conn(:get, "/machinery/api/#{state}/resources/#{page}"), [])
+    assert Poison.decode!(conn.resp_body) == []
+  end
+
+  defp stringify_keys(nil), do: nil
+  defp stringify_keys(%{} = map) do
+    map
+    |> Enum.map(fn {k, v} -> {Atom.to_string(k), v} end)
+    |> Enum.into(%{})
+  end
 end
