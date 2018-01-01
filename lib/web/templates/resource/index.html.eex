@@ -5,14 +5,14 @@
     <div class="col filled">
       <h5 class="colored"><%= state.name %></h5>
       <div class="info"></div>
-      <div class="holder" data-state="<%= state.name %>">
-        <ul class="list-group infinite-list">
+      <div class="holder" data-model-name="<%= @friendly_module_name %>" data-state="<%= state.name %>">
+        <ul class="list-group">
           <%= for resource <- state.resources do %>
             <li class="list-group-item resource-item" data-toggle="modal" data-target="#modal<%= resource.id %>">
               <%= "#{@friendly_module_name} - ##{resource.id}" %>
             </li>
 
-            <div class="modal fade" id="modal<%= resource.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modal<%= resource.id %>" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -37,6 +37,9 @@
               </div>
             </div>
           <% end %>
+          <li class="list-group-item load-more-btn">
+            Load More
+          </li>
         </ul>
       </div>
     </div>

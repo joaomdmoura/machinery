@@ -18,7 +18,7 @@ defmodule MachineryTest.PlugTest do
     conn = Machinery.Plug.call(conn(:get, "/"), "/")
     assert conn.state == :sent
     assert conn.status == 200
-    assert conn.private.phoenix_controller == Machinery.PageController
+    assert conn.private.phoenix_controller == Machinery.ResourceController
   end
 
   @tag :capture_log
@@ -26,6 +26,6 @@ defmodule MachineryTest.PlugTest do
     conn = Machinery.Plug.call(conn(:get, "/machinery"), [])
     assert conn.state == :sent
     assert conn.status == 200
-    assert conn.private.phoenix_controller == Machinery.PageController
+    assert conn.private.phoenix_controller == Machinery.ResourceController
   end
 end

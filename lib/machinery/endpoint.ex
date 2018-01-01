@@ -11,11 +11,5 @@ defmodule Machinery.Endpoint do
     key: "machinery_sid",
     table: :machinery_session
 
-  plug Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json],
-    pass: ["*/*"],
-    json_decoder: Poison
-
-
   plug Machinery.Router
 end

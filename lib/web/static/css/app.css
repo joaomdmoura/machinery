@@ -62,6 +62,21 @@ div.col.filled div.holder {
   border-radius: 5px;
 }
 
+li.load-more-btn{
+  cursor: pointer;
+  background: #7477ce;
+  color: #fff;
+  text-align: center;
+}
+
+li.load-more-btn:hover{
+  background: #4f519e;
+}
+
+li.load-more-btn:active{
+  background: #303164;
+}
+
 @media screen and (min-width: 480px) {
   nav.topbar { display: none; }
 }
