@@ -24,6 +24,7 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 - [Declaring States](#declaring-states)
 - [Changing States](#changing-states)
 - [Persist State](#persist-state)
+- [Enable Dashboard wiht Phoenix](#enable-dashboard-wiht-phoenix)
 - [Guard Functions](#guard-functions)
 - [Before and After Callbacks](#before-and-after-callbacks)
 
@@ -144,6 +145,49 @@ defmodule YourProject.UserStateMachine do
   end
 end
 ```
+
+## Enable Dashboard wiht Phoenix
+
+In case you're using Phoenix and want visual dashboard representing your state
+machine (its states and each resource), you can easily have it.
+This is how it looks like:
+
+![Mahcinery Dashboard Example](https://i.imgur.com/wx9oytG.png)
+
+To enbale the Dashboard you will need to add the Machinery Plug
+to you application Endpoint module.
+
+```elixir
+defmodule YourApp.Endpoint do
+  # ...
+
+  # It accepts the path you want to mount the dashboard at as an argument,
+  # it will mount it under `/machinery` as default.
+  plug Machinery.Plug
+  # plug Machinery.Plug, '/my-custom-route'
+
+  # ...
+end
+```
+
+You will also need to add some config to your `config.exs`:
+
+- `interface`: a flag to enable the dashbord.
+- `repo`: your app's repo module.
+- `model`: the model that will hold the state.
+- `module`: the machinery module where you have the declared states.
+
+```elixir
+config :machinery,
+  interface: true,
+  repo: YourApp.Repo,
+  model: YourApp.User,
+  module: YourApp.UserStateMachine,
+```
+
+That's it, now you can start you Phoenix app and navigates
+to `http://localhost:4000/machinery`, or whatever custou routes you have mounted
+the dashboard at.
 
 ## Guard functions
 Create guard conditions by adding signatures of the `guard_transition/2`
