@@ -32,7 +32,7 @@ defmodule Machinery.Mixfile do
   defp deps do
     [
       {:phoenix, "~> 1.3"},
-      {:phoenix_html, "~> 2.10"},
+      {:phoenix_html, "~> 2.9"},
       {:cowboy, "~> 1.0"},
       {:excoveralls, "~> 0.7", only: :test},
       {:ecto, "~> 2.1"},
