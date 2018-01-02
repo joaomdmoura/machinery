@@ -1,5 +1,5 @@
 defmodule MachineryTest.TransitionTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   doctest Machinery.Transition
   alias Machinery.Transition
 

@@ -31,11 +31,6 @@ defmodule Machinery do
     ```
   """
 
-  alias Machinery.Transition
-
-  @not_declated_error "Transition to this state isn't declared."
-  @guarded_error "Transition not completed, blocked by guard function."
-
   @doc """
   Main macro function that will be executed upon the load of the
   module using it.
@@ -68,6 +63,26 @@ defmodule Machinery do
   end
 
   @doc """
+  Start function that will trigger a supervisor for the Machinery.Transitions, a
+  GenServer that controls the state transitions and also starts another process,
+  if the `interface` config is set to `true, for Machinery.Endpoint, a module
+  that uses Phoenix.Endpoint to expose new routes related to Machinery.
+  """
+  def start(_type, _args) do
+    children = if Application.get_env(:machinery, :interface) do
+      import Supervisor.Spec, warn: false
+      :ets.new(:machinery_session, [:named_table, :public, read_concurrency: true])
+      [supervisor(Machinery.Endpoint, [])]
+    else
+      []
+    end
+
+    children = [{Machinery.Transitions, name: Machinery.Transitions} | children]
+    opts = [strategy: :one_for_one, name: Machinery.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+
+  @doc """
   Triggers the transition of a struct to a new state, accordinly to a specific
   state machine module, if it passes any existing guard functions.
   It also runs any before or after callbacks and returns a tuple with
@@ -86,31 +101,22 @@ defmodule Machinery do
   """
   @spec transition_to(struct, module, String.t) :: {:ok, struct} | {:error, String.t}
   def transition_to(struct, state_machine_module, next_state) do
-    initial_state = state_machine_module._machinery_initial_state()
-    transitions = state_machine_module._machinery_transitions()
-
-    # Getting current state of the struct of falling back to the
-    # first declared state on the struct model.
-    current_state = case Map.get(struct, :state) do
-      nil -> initial_state
-      current_state -> current_state
-    end
-
-    # Checking declared transitions and guard functions before
-    # actually updating the struct and retuning the tuple.
-    cond do
-      !Transition.declared_transition?(transitions, current_state, next_state) ->
-        {:error, @not_declated_error}
-
-      !Transition.guarded_transition?(state_machine_module, struct, next_state) ->
-        {:error, @guarded_error}
-
-      true ->
-        struct = struct
-          |> Transition.before_callbacks(next_state, state_machine_module)
-          |> Transition.persist_struct(next_state, state_machine_module)
-          |> Transition.after_callbacks(next_state, state_machine_module)
-        {:ok, struct}
-    end
+    GenServer.call(Machinery.Transitions, {
+      :run,
+      struct,
+      state_machine_module,
+      next_state
+    })
+  catch
+    :exit, error_tuple ->
+      exception = deep_first_of_tuple(error_tuple)
+      raise exception
   end
+
+  defp deep_first_of_tuple(tuple) when is_tuple(tuple) do
+    tuple
+    |> elem(0)
+    |> deep_first_of_tuple
+  end
+  defp deep_first_of_tuple(value), do: value
 end

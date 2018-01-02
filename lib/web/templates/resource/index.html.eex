@@ -1,0 +1,47 @@
+<h1>Dashboard</h1>
+<h4>States</h4>
+<div class="row spaced">
+  <%= for state <- @states do %>
+    <div class="col filled">
+      <h5 class="colored"><%= state.name %></h5>
+      <div class="info"></div>
+      <div class="holder" data-model-name="<%= @friendly_module_name %>" data-state="<%= state.name %>">
+        <ul class="list-group">
+          <%= for resource <- state.resources do %>
+            <li class="list-group-item resource-item" data-toggle="modal" data-target="#modal<%= resource.id %>">
+              <%= "#{@friendly_module_name} - ##{resource.id}" %>
+            </li>
+
+            <div class="modal fade" id="modal<%= resource.id %>" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><%= "#{@friendly_module_name} - ##{resource.id}" %></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <table class="table table-striped">
+                      <tbody>
+                        <%= for {field, value} <- resource do %>
+                          <tr>
+                            <th scope="row"><%= field %></th>
+                            <td><%= value %></td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <li class="list-group-item load-more-btn">
+            Load More
+          </li>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+</div>

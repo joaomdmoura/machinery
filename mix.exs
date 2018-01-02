@@ -8,6 +8,7 @@ defmodule Machinery.Mixfile do
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       deps: deps(),
+      compilers: [:phoenix] ++ Mix.compilers,
       description: description(),
       package: package(),
       source_url: "https://github.com/joaomdmoura/machinery",
@@ -22,15 +23,19 @@ defmodule Machinery.Mixfile do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [
-      extra_applications: [:logger]
-    ]
+    [mod: {Machinery, []},
+     env: [{Machinery.Endpoint, []}],
+     applications: [:phoenix, :phoenix_html, :cowboy]]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:phoenix, "~> 1.3"},
+      {:phoenix_html, "~> 2.10"},
+      {:cowboy, "~> 1.0"},
       {:excoveralls, "~> 0.7", only: :test},
+      {:ecto, "~> 2.1"},
       {:ex_doc, "~> 0.18", only: :dev, runtime: false}
     ]
   end
@@ -45,7 +50,8 @@ defmodule Machinery.Mixfile do
     [
       maintainers: ["João M. D. Moura"],
       licenses: ["Apache 2.0"],
-      links: %{"GitHub" => "https://github.com/joaomdmoura/machinery"}
+      links: %{"GitHub" => "https://github.com/joaomdmoura/machinery"},
+      files: ["lib", "web", "priv", "mix.exs", "README*", "LICENSE*"]
     ]
   end
 end
