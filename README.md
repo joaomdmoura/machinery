@@ -47,7 +47,7 @@ is a Phoenix model make sure you add it to the `schema`, as a `string`,  and
 to the `changeset/2`:
 
 ```elixir
-defmodule YourProject.UserStateMachine do
+defmodule YourProject.User do
   schema "users" do
     # ...
     field :state, :string
@@ -136,7 +136,7 @@ defmodule YourProject.UserStateMachine do
 
   use Machinery,
     states: ["created", "complete"],
-    transitions: %{"created" => "complete}
+    transitions: %{"created" => "complete"}
 
   def persist(struct, next_state) do
     # Updating a user on the database with the new state.
@@ -182,7 +182,7 @@ config :machinery,
   interface: true,
   repo: YourApp.Repo,
   model: YourApp.User,
-  module: YourApp.UserStateMachine,
+  module: YourApp.UserStateMachine
 ```
 
 That's it, now you can start you Phoenix app and navigates
