@@ -1,6 +1,8 @@
 # ChangeLog
 
 ## WIP Version
+
+## 0.8.0
 - Adding first version of Machinery Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/14)
 
 ## 0.7.0
