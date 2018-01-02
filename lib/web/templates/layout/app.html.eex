@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "#{@mount_path}/css/app.css") %>">
   </head>
 
-  <body>
+  <body data-mounted-path="<%= @mount_path %>">
     <div class="container-fluid">
       <div class="row">
         <nav class="navbar navbar-expand-md fixed-top topbar">

@@ -50,8 +50,7 @@ defmodule Machinery.Mixfile do
     [
       maintainers: ["João M. D. Moura"],
       licenses: ["Apache 2.0"],
-      links: %{"GitHub" => "https://github.com/joaomdmoura/machinery"},
-      files: ["lib", "web", "priv", "mix.exs", "README*", "LICENSE*"]
+      links: %{"GitHub" => "https://github.com/joaomdmoura/machinery"}
     ]
   end
 end

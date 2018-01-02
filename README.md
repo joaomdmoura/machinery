@@ -47,7 +47,7 @@ is a Phoenix model make sure you add it to the `schema`, as a `string`,  and
 to the `changeset/2`:
 
 ```elixir
-defmodule YourProject.YouModule do
+defmodule YourProject.UserStateMachine do
   schema "users" do
     # ...
     field :state, :string

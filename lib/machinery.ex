@@ -65,7 +65,7 @@ defmodule Machinery do
   @doc """
   Start function that will trigger a supervisor for the Machinery.Transitions, a
   GenServer that controls the state transitions and also starts another process,
-  if the `interface` config is set to `true, for Machinery.Endpoint, a module
+  if the `interface` config is set to `true`, for Machinery.Endpoint, a module
   that uses Phoenix.Endpoint to expose new routes related to Machinery.
   """
   def start(_type, _args) do
