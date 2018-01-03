@@ -4,4 +4,3 @@ _build/*
 assets/*
 deps/*
 doc/*
-priv/*

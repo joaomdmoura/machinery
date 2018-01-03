@@ -2,6 +2,7 @@
 
 ## WIP Version
 - Requiring a previous version of phoenix_html to enable older applications to use Machinery.
+- Versioning compiled version of the assets to fix bug on dashboard interface.
 
 ## 0.8.0
 - Adding first version of Machinery Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/14)
