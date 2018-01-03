@@ -1,6 +1,8 @@
 # ChangeLog
 
 ## WIP Version
+
+## 0.8.2
 - Requiring a previous version of phoenix_html to enable older applications to use Machinery.
 - Versioning compiled version of the assets to fix bug on dashboard interface.
 
