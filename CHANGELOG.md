@@ -1,7 +1,8 @@
 # ChangeLog
 
 ## WIP Version
-- Adding a default config diabling the Machinery Dashboard
+- Adding a default config desabling the Machinery Dashboard
+- Making the Machinery Dashbaord bigger
 
 ## 0.8.2
 - Requiring a previous version of phoenix_html to enable older applications to use Machinery.
