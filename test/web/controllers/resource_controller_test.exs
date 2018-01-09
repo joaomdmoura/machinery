@@ -18,6 +18,7 @@ defmodule MachineryTest.ResourceControllerTest do
 
   @tag :capture_log
   test "index/2 should assign a list with the resources in each state" do
+    Application.put_env(:machinery, :dashboard_states, nil)
     conn = Machinery.Plug.call(conn(:get, "/"), "/")
     resoruces_for_each_state = Enum.map(TestStateMachine._machinery_states(), fn(_x) ->
       TestRepo.all(nil)
