@@ -32,7 +32,7 @@ defmodule MachineryTest.Helper do
     Process.exit(supervisor_pid, :kill)
     receive do
       _ ->
-        :timer.sleep(1000)
+        :timer.sleep(1500)
         Application.start(:machinery)
     end
   end

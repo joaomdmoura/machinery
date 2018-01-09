@@ -17,8 +17,12 @@ defmodule Machinery.ResourceController do
     model = conn.assigns.model
     machinery_module = conn.assigns.module
 
-    states = machinery_module._machinery_states()
-    states_and_resources = Enum.map(states, fn(state) ->
+    desired_states = case Application.get_env(:machinery, :dashboard_states) do
+      nil -> machinery_module._machinery_states()
+      states -> states
+    end
+
+    states_and_resources = Enum.map(desired_states, fn(state) ->
       resources = get_resources_for_state(repo, model, state)
       %{name: state, resources: resources}
     end)
