@@ -51,14 +51,14 @@ div.col.filled {
 
 div.col.filled div.holder-limiter {
   overflow: hidden;
-  height: 96%;
+  height: 45%;
   border-radius: 5px;
 }
 
 div.col.filled div.holder {
   overflow: scroll;
   border: 1px solid #ddd;
-  height: 96%;
+  height: 45%;
   border-radius: 5px;
 }
 

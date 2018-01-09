@@ -2,7 +2,7 @@
 <h4>States</h4>
 <div class="row spaced">
   <%= for state <- @states do %>
-    <div class="col filled">
+    <div class="col-2 filled">
       <h5 class="colored"><%= state.name %></h5>
       <div class="info"></div>
       <div class="holder" data-model-name="<%= @friendly_module_name %>" data-state="<%= state.name %>">
