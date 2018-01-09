@@ -3,6 +3,7 @@
 ## WIP Version
 - Adding a default config desabling the Machinery Dashboard
 - Making the Machinery Dashbaord bigger
+- Enabling users to overwrite the desired state on Machinery Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/21)
 
 ## 0.8.2
 - Requiring a previous version of phoenix_html to enable older applications to use Machinery.
