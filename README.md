@@ -176,12 +176,14 @@ You will also need to add some config to your `config.exs`:
 - `repo`: your app's repo module.
 - `model`: the model that will hold the state.
 - `module`: the machinery module where you have the declared states.
+- *(Optional)* `dashboard_states`: A list of the states you want on the dashboard.
 
 ```elixir
 config :machinery,
   interface: true,
   repo: YourApp.Repo,
   model: YourApp.User,
+  # Optinal: dashboard_states: ["created", "partial"],
   module: YourApp.UserStateMachine
 ```
 

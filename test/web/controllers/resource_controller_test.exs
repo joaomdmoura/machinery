@@ -12,6 +12,7 @@ defmodule MachineryTest.ResourceControllerTest do
 
   @tag :capture_log
   test "index/2 should assign a state map to the conn with all states declared" do
+    Application.put_env(:machinery, :dashboard_states, nil)
     conn = Machinery.Plug.call(conn(:get, "/"), "/")
     assert TestStateMachine._machinery_states() == Enum.map(conn.assigns.states, &(&1.name))
   end
