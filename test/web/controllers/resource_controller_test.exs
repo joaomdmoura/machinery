@@ -19,7 +19,7 @@ defmodule MachineryTest.ResourceControllerTest do
   @tag :capture_log
   test "index/2 should assign a list with the resources in each state" do
     conn = Machinery.Plug.call(conn(:get, "/"), "/")
-    resoruces_for_each_state = Enum.map(conn.assigns.states, fn(_x) ->
+    resoruces_for_each_state = Enum.map(TestStateMachine._machinery_states(), fn(_x) ->
       TestRepo.all(nil)
     end)
     assert resoruces_for_each_state == Enum.map(conn.assigns.states, &(&1.resources))
@@ -53,6 +53,17 @@ defmodule MachineryTest.ResourceControllerTest do
     page = 2
     conn = Machinery.Plug.call(conn(:get, "/machinery/api/#{state}/resources/#{page}"), [])
     assert Poison.decode!(conn.resp_body) == []
+  end
+
+  @tag :capture_log
+  test "index/2 should overwrite the desired states based on a machinery config" do
+    state = List.first(TestStateMachine._machinery_states())
+    Application.put_env(:machinery, :dashboard_states, [state])
+    conn = Machinery.Plug.call(conn(:get, "/"), "/")
+    resoruces_for_each_state = Enum.map([state], fn(_x) ->
+      TestRepo.all(nil)
+    end)
+    assert resoruces_for_each_state == Enum.map(conn.assigns.states, &(&1.resources))
   end
 
   defp stringify_keys(nil), do: nil
