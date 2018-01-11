@@ -43,22 +43,14 @@ ul li.resource-item:hover {
   background-color: #e6e7f8;
 }
 
-div.col.filled {
-  height: 85vh;
-  min-height: 700px;
+div.col-md-2.filled {
+  max-height: 50vh;
   overflow: hidden;
 }
 
-div.col.filled div.holder-limiter {
-  overflow: hidden;
-  height: 45%;
-  border-radius: 5px;
-}
-
-div.col.filled div.holder {
+div.col-md-2.filled div.holder {
   overflow: scroll;
-  border: 1px solid #ddd;
-  height: 45%;
+  height: 87%;
   border-radius: 5px;
 }
 
