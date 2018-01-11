@@ -12,4 +12,8 @@ defmodule MachineryTest.TestRepo do
     end
   end
   def all(_), do: [%{id: 1}, %{id: 2}, %{id: 3}]
+
+  def get!(_model, id) do
+    %{id: id}
+  end
 end

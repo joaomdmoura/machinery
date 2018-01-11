@@ -150,6 +150,8 @@ end
 
 In case you're using Phoenix and want visual dashboard representing your state
 machine (its states and each resource), you can easily have it.
+It will also enable you to change states by tragging item from one state
+to another.
 This is how it looks like:
 
 ![Mahcinery Dashboard Example](https://i.imgur.com/wx9oytG.png)

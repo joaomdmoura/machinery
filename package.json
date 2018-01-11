@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/joaomdmoura/machinery/issues"
   },
-  "homepage": "https://github.com/joaomdmoura/machinery#readme"
+  "homepage": "https://github.com/joaomdmoura/machinery#readme",
+  "dependencies": {
+    "sortablejs": "^1.7.0"
+  }
 }

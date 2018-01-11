@@ -2,7 +2,18 @@ defmodule Machinery.ResourceController do
   use Machinery.Web, :controller
   import Ecto.Query
 
-  @items_per_page 50
+  @items_per_page 30
+
+  def update(conn, %{"id" => id, "state" => state} = _params) do
+    repo = conn.assigns.repo
+    model = conn.assigns.model
+    machinery_module = conn.assigns.module
+
+    struct = repo.get!(model, id)
+    {transition, content} = Machinery.transition_to(struct, machinery_module, state)
+
+    json(conn, [transition, content])
+  end
 
   def index(conn, %{"state" => state, "page" => page} = _params) do
     repo = conn.assigns.repo
@@ -11,7 +22,6 @@ defmodule Machinery.ResourceController do
     resources = get_resources_for_state(repo, model, state, page)
     json(conn, resources)
   end
-
   def index(conn, _params) do
     repo = conn.assigns.repo
     model = conn.assigns.model

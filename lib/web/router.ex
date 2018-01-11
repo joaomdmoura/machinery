@@ -20,6 +20,7 @@ defmodule Machinery.Router do
 
   scope "/api", Machinery do
     pipe_through :api
-    get "/:state/resources/:page", ResourceController, :index
+    post "/resources/:id", ResourceController, :update
+    get "/resources/:state/:page", ResourceController, :index
   end
 end

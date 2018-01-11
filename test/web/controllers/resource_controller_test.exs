@@ -44,7 +44,7 @@ defmodule MachineryTest.ResourceControllerTest do
   test "index/2 should also respond to /api requests returning json" do
     state = List.first(TestStateMachine._machinery_states())
     page = 1
-    conn = Machinery.Plug.call(conn(:get, "/machinery/api/#{state}/resources/#{page}"), [])
+    conn = Machinery.Plug.call(conn(:get, "/machinery/api/resources/#{state}/#{page}"), [])
     resources_maps = Enum.map(TestRepo.all(nil), &stringify_keys/1)
     assert Poison.decode!(conn.resp_body) == resources_maps
   end
@@ -53,7 +53,7 @@ defmodule MachineryTest.ResourceControllerTest do
   test "index/2 api should paginate correctly" do
     state = List.first(TestStateMachine._machinery_states())
     page = 2
-    conn = Machinery.Plug.call(conn(:get, "/machinery/api/#{state}/resources/#{page}"), [])
+    conn = Machinery.Plug.call(conn(:get, "/machinery/api/resources/#{state}/#{page}"), [])
     assert Poison.decode!(conn.resp_body) == []
   end
 
@@ -66,6 +66,13 @@ defmodule MachineryTest.ResourceControllerTest do
       TestRepo.all(nil)
     end)
     assert resoruces_for_each_state == Enum.map(conn.assigns.states, &(&1.resources))
+  end
+
+  @tag :capture_log
+  test "index/2 api should enable to transition states" do
+    updated_stuct = %{"state" => "partial", "missing_fields" => true, "id" => "1"}
+    conn = Machinery.Plug.call(conn(:post, "/machinery/api/resources/#{updated_stuct["id"]}", state: "partial"), [])
+    assert Poison.decode!(conn.resp_body) == ["ok", updated_stuct]
   end
 
   defp stringify_keys(nil), do: nil
