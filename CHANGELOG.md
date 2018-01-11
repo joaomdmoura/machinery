@@ -1,6 +1,8 @@
 # ChangeLog
 
 ## WIP Version
+
+## 0.11.0
 - Adding a default config desabling the Machinery Dashboard
 - Making the Machinery Dashboard bigger
 - Enabling users to overwrite the desired state on Machinery Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/21)
