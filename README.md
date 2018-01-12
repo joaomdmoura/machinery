@@ -114,7 +114,7 @@ Machinery.transition_to(your_struct, YourStateMachine, "next_state")
 
 ```elixir
 user = Accounts.get_user!(1)
-UserStateMachine.transition_to(user, UserStateMachine, "complete")
+Machinery.transition_to(user, UserStateMachine, "complete")
 ```
 
 ## Persist State
@@ -201,7 +201,7 @@ desired state you want to guard.
 
 ```elixir
 # The second argument is used to pattern match into the state
-# and guard the transition to it
+# and guard the transition to it.
 def guard_transition(struct, "guarded_state") do
  # Your guard logic here
 end
@@ -217,7 +217,7 @@ Guard conditions should return a boolean:
 defmodule YourProject.UserStateMachine do
   use Machinery,
     states: ["created", "complete"],
-    transitions: %{"created" => "complete}
+    transitions: %{"created" => "complete"}
 
   # Guard the transition to the "complete" state.
   def guard_transition(struct, "complete") do
