@@ -153,8 +153,9 @@ const SortableList = require('./sortable_list.js');
 const listHolders = $('.holder');
 const lists = {};
 
-var el = $('.itemslol');
-
+$('#toogle-all-states').on('click', function () {
+  $('div.collapse').collapse('toggle');
+});
 
 $.each(listHolders, function(_i, holder) {
   let list = new ResourceList(holder);
@@ -282,7 +283,12 @@ module.exports = class SortableList {
   rollbackTransition(message, event) {
     let error_message = `${message} Item moved back to it's original state.`
     let template = alertTemplate.render(error_message);
-    $('main').prepend(template);
+    $('#alerts-holder').prepend(template);
+    $('#alerts-holder ').find(".alert-danger").
+    fadeTo(6000, 500).
+    slideUp(500, function(){
+      $('#alerts-holder ').find(".alert-danger").alert('close');
+    });
     this.moveItemBack(event.item, event.from, event.oldIndex);
   }
 
@@ -311,7 +317,6 @@ let renderAlert = function(message) {
     </button>
   </div>
   `
-
 }
 
 module.exports = {
