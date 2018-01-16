@@ -1,7 +1,10 @@
 # ChangeLog
 
 ## WIP Version
+
+## 0.12.0
 - Adding new toogle all btn and auto closing alerts - [Pull Request](https://github.com/joaomdmoura/machinery/pull/24)
+- Fixing Bug to rollback state transition on the Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/25)
 
 ## 0.11.0
 - Adding a default config desabling the Machinery Dashboard
