@@ -295,12 +295,16 @@ module.exports = class SortableList {
   moveItemBack(item, state, index) {
     let _index = (index == 0) ? 0 : index - 1
     let _item = $(state).find("li.resource-item").eq(_index)
-
-    if(index == 0){
-      $(item).insertBefore(_item);
+    if(_item[0]){
+      if(index == 0){
+        $(item).insertBefore(_item);
+      }
+      else {
+        $(item).insertAfter(_item);
+      }
     }
-    else {
-      $(item).insertAfter(_item);
+    else{
+      $(state).prepend(item);
     }
   }
 }
