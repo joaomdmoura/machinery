@@ -1,5 +1,10 @@
+<div id="alerts-holder">
+</div>
 <h1>Dashboard</h1>
 <h4>States</h4>
+<button class="btn btn-secondary btn-sm" role="button" id="toogle-all-states">
+  Toogle all States
+</button>
 <div id="states-container" class="row spaced">
   <%= for state <- @states do %>
     <div class="col-md-2 filled col-sm-12">

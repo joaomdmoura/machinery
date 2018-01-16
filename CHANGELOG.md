@@ -1,6 +1,7 @@
 # ChangeLog
 
 ## WIP Version
+- Adding new toogle all btn and auto closing alerts - [Pull Request](https://github.com/joaomdmoura/machinery/pull/24)
 
 ## 0.11.0
 - Adding a default config desabling the Machinery Dashboard
