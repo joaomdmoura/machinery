@@ -10,7 +10,10 @@ defmodule Machinery.ResourceController do
     machinery_module = conn.assigns.module
 
     struct = repo.get!(model, id)
-    {transition, content} = Machinery.transition_to(struct, machinery_module, state)
+    {transition, content} = case Machinery.transition_to(struct, machinery_module, state) do
+      {:ok, struct} -> {:ok, struct.id}
+      {:error, message} -> {:error, message}
+    end
 
     json(conn, [transition, content])
   end

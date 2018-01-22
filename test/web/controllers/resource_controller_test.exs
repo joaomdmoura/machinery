@@ -71,8 +71,9 @@ defmodule MachineryTest.ResourceControllerTest do
   @tag :capture_log
   test "index/2 api should enable to transition states" do
     updated_stuct = %{"state" => "partial", "missing_fields" => true, "id" => "1"}
+    id = Map.get(updated_stuct, "id")
     conn = Machinery.Plug.call(conn(:post, "/machinery/api/resources/#{updated_stuct["id"]}", state: "partial"), [])
-    assert Poison.decode!(conn.resp_body) == ["ok", updated_stuct]
+    assert Poison.decode!(conn.resp_body) == ["ok", id]
   end
 
   defp stringify_keys(nil), do: nil
