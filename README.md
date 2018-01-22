@@ -154,7 +154,7 @@ It will also enable you to change states by tragging item from one state
 to another.
 This is how it looks like:
 
-![Mahcinery Dashboard Example](https://i.imgur.com/wx9oytG.png)
+![Mahcinery Dashboard Example](https://imgur.com/D5Ko9xP.gif)
 
 To enbale the Dashboard you will need to add the Machinery Plug
 to you application Endpoint module.
