@@ -1,6 +1,7 @@
 # ChangeLog
 
 ## WIP Version
+- Better treating the JSON return for the Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/27)
 
 ## 0.12.0
 - Adding new toogle all btn and auto closing alerts - [Pull Request](https://github.com/joaomdmoura/machinery/pull/24)
