@@ -146,7 +146,7 @@ defmodule YourProject.UserStateMachine do
 end
 ```
 
-## Enable Dashboard wiht Phoenix
+## Enable Dashboard with Phoenix
 
 In case you're using Phoenix and want visual dashboard representing your state
 machine (its states and each resource), you can easily have it.
