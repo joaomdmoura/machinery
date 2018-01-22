@@ -1,6 +1,8 @@
 # ChangeLog
 
 ## WIP Version
+
+## 0.12.1
 - Better treating the JSON return for the Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/27)
 
 ## 0.12.0
