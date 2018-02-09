@@ -14,7 +14,7 @@ and having guard clauses + callbacks for structs in general.
 It also aims to have (when implemented with Phoenix) an optional
 build-in GUI that will represent each resource's state.
 
-### Do you always need a process to be a state machine?
+### Do you always need a state machine to be a process?
 Yes? This is not your library. You might be better off with
 another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
 
