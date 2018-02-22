@@ -2,6 +2,7 @@
 
 ## WIP Version
 
+## 0.13.0
 - Adding basic auth to Machinery Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/30)
 
 ## 0.12.1
