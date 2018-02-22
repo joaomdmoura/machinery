@@ -179,9 +179,10 @@ You will also need to add some config to your `config.exs`:
 - `model`: the model that will hold the state.
 - `module`: the machinery module where you have the declared states.
 - *(Optional)* `dashboard_states`: A list of the states you want on the dashboard.
-- *(Optional)* `authorization`: a map.
+- *(Optional)* `authorization`: Keyword list.
   - `username`: username for basic auth.
   - `password`: password for basic auth.
+  - `realm`: real for the basic auth.
 
 ```elixir
 config :machinery,
@@ -190,10 +191,11 @@ config :machinery,
   model: YourApp.User,
   module: YourApp.UserStateMachine,
   # Optinal: dashboard_states: ["created", "partial"],
-  # Optinal: authorization: %{
-  #  username: "machinery",
-  #  password: "machinery_pass"
-  # }
+  # Optinal: authorization: [
+  #  username: "admin",
+  #  password: "simple_password",
+  #  realm: "machinery"
+  # ]
 ```
 
 That's it, now you can start you Phoenix app and navigates
