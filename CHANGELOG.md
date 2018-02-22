@@ -2,6 +2,8 @@
 
 ## WIP Version
 
+- Adding basic auth to Machinery Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/30)
+
 ## 0.12.1
 - Better treating the JSON return for the Dashboard - [Pull Request](https://github.com/joaomdmoura/machinery/pull/27)
 

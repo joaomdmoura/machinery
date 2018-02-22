@@ -17,5 +17,10 @@ defmodule Machinery.Endpoint do
     json_decoder: Poison,
     length: 500_000_000
 
+  auth_options = Application.get_env(:machinery, :authorization)
+  if auth_options do
+    plug BasicAuth, use_config: {:machinery, :authorization}
+  end
+
   plug Machinery.Router
 end
