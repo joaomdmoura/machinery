@@ -6,13 +6,14 @@
 
 ![Machinery](https://github.com/joaomdmoura/machinery/blob/master/logo.png)
 
-Machinery is a thin State Machine library that integrates with
+Machinery is a thin State Machine library for Elixir that integrates with
 Phoenix out of the box.
 
 It's just a small layer that provides a DSL for declaring states
 and having guard clauses + callbacks for structs in general.
 It also aims to have (when implemented with Phoenix) an optional
 build-in GUI that will represent each resource's state.
+You can also use it with pure elixir. (without the dashboard)
 
 ### Do you always need a state machine to be a process?
 Yes? This is not your library. You might be better off with
