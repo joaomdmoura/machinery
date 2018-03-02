@@ -25,7 +25,7 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 - [Declaring States](#declaring-states)
 - [Changing States](#changing-states)
 - [Persist State](#persist-state)
-- [Enable Dashboard wiht Phoenix](#enable-dashboard-wiht-phoenix)
+- [Enable Dashboard with Phoenix](#enable-dashboard-wiht-phoenix)
 - [Guard Functions](#guard-functions)
 - [Before and After Callbacks](#before-and-after-callbacks)
 
@@ -65,7 +65,7 @@ end
 
 ## Declaring States
 
-Declare the states as an argment when importing `Machinery` on the module that
+Declare the states as an argument when importing `Machinery` on the module that
 will control your states transitions.
 
 It's strongly recommended that you create a new module for your State Machine
@@ -83,7 +83,7 @@ Machinery expects a `Keyword` as argument with two keys `states` and `transition
 defmodule YourProject.UserStateMachine do
   use Machinery,
     # The first state declared will be considered
-    # the intial state
+    # the initial state
     states: ["created", "partial", "complete"],
     transitions: %{
       "created" =>  ["partial", "complete"],
@@ -120,10 +120,10 @@ Machinery.transition_to(user, UserStateMachine, "complete")
 
 ## Persist State
 To persist the struct and the state transition automatically, instead of having
-Mahcinery changing the struct itself, you can declare a `persist/2` function on
+Machinery changing the struct itself, you can declare a `persist/2` function on
 the state machine module.
 
-It will receive the unchaged `struct` as the first argument and a `string` of the
+It will receive the unchanged `struct` as the first argument and a `string` of the
 next state as the second one, after every state transition. That will be called
 between the before and after transition callbacks.
 
@@ -191,8 +191,8 @@ config :machinery,
   repo: YourApp.Repo,
   model: YourApp.User,
   module: YourApp.UserStateMachine,
-  # Optinal: dashboard_states: ["created", "partial"],
-  # Optinal: authorization: [
+  # Optional: dashboard_states: ["created", "partial"],
+  # Optional: authorization: [
   #  username: "admin",
   #  password: "simple_password",
   #  realm: "machinery"
