@@ -36,7 +36,6 @@ defmodule MachineryTest do
     assert {:ok, %TestStruct{state: "canceled"}} = Machinery.transition_to(completed_struct, TestStateMachine, "canceled")
   end
 
-
   test "Guard functions should be executed before moving the resource to the next state" do
     struct = %TestStruct{state: "created", missing_fields: true}
     assert {:error, "Transition not completed, blocked by guard function."} = Machinery.transition_to(struct, TestStateMachineWithGuard, "completed")
