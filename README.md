@@ -84,13 +84,17 @@ defmodule YourProject.UserStateMachine do
   use Machinery,
     # The first state declared will be considered
     # the initial state
-    states: ["created", "partial", "complete"],
+    states: ["created", "partial", "complete", "canceled"],
     transitions: %{
       "created" =>  ["partial", "complete"],
-      "partial" => "completed"
+      "partial" => "completed",
+      "*" => "canceled
     }
 end
 ```
+
+As you might notice you can use wildcards `"*"` to declare a transition that
+can happen from any state to a specific one.
 
 ## Changing States
 

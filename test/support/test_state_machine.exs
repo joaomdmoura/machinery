@@ -1,9 +1,10 @@
 defmodule MachineryTest.TestStateMachine do
   use Machinery,
-    states: ["created", "partial", "completed"],
+    states: ["created", "partial", "completed", "canceled"],
     transitions: %{
       "created" => ["partial", "completed"],
-      "partial" => "completed"
+      "partial" => "completed",
+      "*" => "canceled"
     }
 
   def before_transition(struct, "partial") do
