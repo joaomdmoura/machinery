@@ -1,6 +1,8 @@
 # ChangeLog
 
 ## WIP Version
+
+## 0.14.0
 - Adding support for wildcard transitions - [Pull Request](https://github.com/joaomdmoura/machinery/pull/32)
 
 ## 0.13.0
