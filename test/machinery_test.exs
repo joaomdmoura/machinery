@@ -26,6 +26,17 @@ defmodule MachineryTest do
     assert {:error, "Transition to this state isn't declared."} = Machinery.transition_to(completed_struct, TestStateMachine, "created")
   end
 
+  test "Wildcard transitions should be valid" do
+    created_struct = %TestStruct{state: "created", missing_fields: false}
+    partial_struct = %TestStruct{state: "partial", missing_fields: false}
+    completed_struct = %TestStruct{state: "completed"}
+
+    assert {:ok, %TestStruct{state: "canceled", missing_fields: false}} = Machinery.transition_to(created_struct, TestStateMachine, "canceled")
+    assert {:ok, %TestStruct{state: "canceled", missing_fields: false}} = Machinery.transition_to(partial_struct, TestStateMachine, "canceled")
+    assert {:ok, %TestStruct{state: "canceled"}} = Machinery.transition_to(completed_struct, TestStateMachine, "canceled")
+  end
+
+
   test "Guard functions should be executed before moving the resource to the next state" do
     struct = %TestStruct{state: "created", missing_fields: true}
     assert {:error, "Transition not completed, blocked by guard function."} = Machinery.transition_to(struct, TestStateMachineWithGuard, "completed")

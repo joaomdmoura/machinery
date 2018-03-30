@@ -12,10 +12,10 @@ defmodule Machinery.Transition do
   """
   @spec declared_transition?(list, atom, atom) :: boolean
   def declared_transition?(transitions, current_state, next_state) do
-    case Map.fetch(transitions, current_state) do
-      {:ok, [_|_] = declared_states} -> Enum.member?(declared_states, next_state)
-      {:ok, declared_state} -> declared_state == next_state
-      :error -> false
+    if matches_wildcard?(transitions, next_state) do
+      true
+    else
+      matches_transition?(transitions, current_state, next_state)
     end
   end
 
@@ -57,6 +57,18 @@ defmodule Machinery.Transition do
   @spec persist_struct(struct, atom, module) :: struct
   def persist_struct(struct, state, module) do
     run_or_fallback(&module.persist/2, &persist_fallback/3, struct, state)
+  end
+
+  defp matches_wildcard?(transitions, next_state) do
+    matches_transition?(transitions, "*", next_state)
+  end
+
+  defp matches_transition?(transitions, current_state, next_state) do
+    case Map.fetch(transitions, current_state) do
+      {:ok, [_|_] = declared_states} -> Enum.member?(declared_states, next_state)
+      {:ok, declared_state} -> declared_state == next_state
+      :error -> false
+    end
   end
 
   # Private function that receives a function, a callback,
