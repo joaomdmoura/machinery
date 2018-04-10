@@ -25,6 +25,7 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 - [Declaring States](#declaring-states)
 - [Changing States](#changing-states)
 - [Persist State](#persist-state)
+- [Logging Transitions](#logging-transitions)
 - [Enable Dashboard with Phoenix](#enable-dashboard-wiht-phoenix)
 - [Guard Functions](#guard-functions)
 - [Before and After Callbacks](#before-and-after-callbacks)
@@ -147,6 +148,36 @@ defmodule YourProject.UserStateMachine do
     # Updating a user on the database with the new state.
     {:ok, user} = Accounts.update_user(struct, %{state: next_state})
     user
+  end
+end
+```
+
+## Logging Transitions
+To log/persist the transitions itself Machinery provides a callback
+`log_transitions/2` that will be called on every transition.
+
+It will receive the unchanged `struct` as the first argument and a `string` of
+the next state as the second one, after every state transition.
+This function will be called between the before and after transition callbacks
+and after the persist function.
+
+**`log_transition/2` should always return the updated struct.**
+
+### Example:
+
+```elixir
+defmodule YourProject.UserStateMachine do
+  alias YourProject.Accounts
+
+  use Machinery,
+    states: ["created", "complete"],
+    transitions: %{"created" => "complete"}
+
+  def log_transition(struct, _next_state) do
+    # Log transition here, save on the DB or whatever.
+    # ...
+    # Return the struct.
+    struct
   end
 end
 ```

@@ -15,4 +15,13 @@ defmodule MachineryTest.TestStateMachineWithGuard do
 
     Map.get(struct, :missing_fields) == false
   end
+
+  def log_transition(struct, _next_state) do
+    # Log transition here
+    if Map.get(struct, :force_exception) do
+      Machinery.non_existing_function_should_raise_error()
+    end
+
+    struct
+  end
 end

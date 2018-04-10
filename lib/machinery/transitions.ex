@@ -41,6 +41,7 @@ defmodule Machinery.Transitions do
         struct = struct
           |> Transition.before_callbacks(next_state, state_machine_module)
           |> Transition.persist_struct(next_state, state_machine_module)
+          |> Transition.log_transition(next_state, state_machine_module)
           |> Transition.after_callbacks(next_state, state_machine_module)
         {:ok, struct}
     end

@@ -1,6 +1,7 @@
 # ChangeLog
 
 ## WIP Version
+- Adding support for transitions logging - [Pull Request](https://github.com/joaomdmoura/machinery/pull/33)
 
 ## 0.14.0
 - Adding support for wildcard transitions - [Pull Request](https://github.com/joaomdmoura/machinery/pull/32)
