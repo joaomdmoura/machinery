@@ -50,13 +50,22 @@ defmodule Machinery.Transition do
   end
 
   @doc """
-  This functions will try to trigger persistence, if declared, to the struct
+  This function will try to trigger persistence, if declared, to the struct
   changing state.
   This is meant to be for internal use only.
   """
   @spec persist_struct(struct, atom, module) :: struct
   def persist_struct(struct, state, module) do
     run_or_fallback(&module.persist/2, &persist_fallback/3, struct, state)
+  end
+
+  @doc """
+  Function resposible for triggering transitions persistence.
+  This is meant to be for internal use only.
+  """
+  @spec log_transition(struct, atom, module) :: struct
+  def log_transition(struct, state, module) do
+    run_or_fallback(&module.log_transition/2, &log_transition_fallback/3, struct, state)
   end
 
   defp matches_wildcard?(transitions, next_state) do
@@ -86,6 +95,14 @@ defmodule Machinery.Transition do
   defp persist_fallback(struct, state, error) do
     if error.function  == :persist && error.arity == 2 do
       Map.put(struct, :state, state)
+    else
+      raise error
+    end
+  end
+
+  defp log_transition_fallback(struct, _state, error) do
+    if error.function == :log_transition && error.arity == 2 do
+      struct
     else
       raise error
     end

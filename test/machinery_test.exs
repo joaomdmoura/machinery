@@ -99,6 +99,19 @@ defmodule MachineryTest do
     end
   end
 
+  test "Transition log function should be called after the transition" do
+    struct = %TestStruct{state: "created"}
+    assert {:ok, _} = Machinery.transition_to(struct, TestStateMachineWithGuard, "partial")
+  end
+
+  @tag :capture_log
+  test "Transition log function should still reaise errors if not related to the existence of persist/1 method" do
+    wrong_struct = %TestStruct{state: "created", force_exception: true}
+    assert_raise UndefinedFunctionError, fn() ->
+      Machinery.transition_to(wrong_struct, TestStateMachineWithGuard, "partial")
+    end
+  end
+
   @tag :capture_log
   test "Machinery.Transitions GenServer should be started under the Machinery.Supervisor" do
     transitions_pid = Process.whereis(Machinery.Transitions)
