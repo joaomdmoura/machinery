@@ -19,7 +19,9 @@ You can also use it with pure elixir. (without the dashboard)
 Yes? This is not your library. You might be better off with
 another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
 
-Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
+Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery).
+
+If you want a full tutorial you might wan to consider check [State Machine in Elixir with Machinery](http://joaomdmoura.com/articles/state-machine-in-elixir-with-machinery)
 
 - [Installing](#installing)
 - [Declaring States](#declaring-states)
