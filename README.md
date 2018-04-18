@@ -21,7 +21,7 @@ another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
 
 Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery).
 
-If you want a full tutorial you might wan to consider check [State Machine in Elixir with Machinery](http://joaomdmoura.com/articles/state-machine-in-elixir-with-machinery)
+If you want a full tutorial you might wan to consider check [State Machine in Elixir with Machinery](http://joaomdmoura.com/articles/state-machine-in-elixir-with-machinery), keep in mind that this might be outdates
 
 - [Installing](#installing)
 - [Declaring States](#declaring-states)
