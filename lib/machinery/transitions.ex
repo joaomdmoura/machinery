@@ -9,7 +9,10 @@ defmodule Machinery.Transitions do
   alias Machinery.Transition
 
   @not_declated_error "Transition to this state isn't declared."
-  @guarded_error "Transition not completed, blocked by guard function."
+
+  def init(args) do
+    {:ok, args}
+  end
 
   @doc false
   def start_link(opts) do
@@ -30,12 +33,15 @@ defmodule Machinery.Transitions do
 
     # Checking declared transitions and guard functions before
     # actually updating the struct and retuning the tuple.
+    declared_transition? = Transition.declared_transition?(transitions, current_state, next_state)
+    guarded_transition? = Transition.guarded_transition?(state_machine_module, struct, next_state)
+
     response = cond do
-      !Transition.declared_transition?(transitions, current_state, next_state) ->
+      !declared_transition? ->
         {:error, @not_declated_error}
 
-      !Transition.guarded_transition?(state_machine_module, struct, next_state) ->
-        {:error, @guarded_error}
+      guarded_transition? ->
+        guarded_transition?
 
       true ->
         struct = struct
