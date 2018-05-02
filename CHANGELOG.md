@@ -1,6 +1,8 @@
 # ChangeLog
 
 ## WIP Version
+
+## 0.16.0
 - Support for custom error messages on guard functions - [Pull Request](https://github.com/joaomdmoura/machinery/pull/35)
 
 ## 0.15.0
