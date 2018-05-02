@@ -26,7 +26,10 @@ defmodule Machinery.Transition do
   """
   @spec guarded_transition?(module, struct, atom) :: boolean
   def guarded_transition?(module, struct, state) do
-    run_or_fallback(&module.guard_transition/2, &guard_transition_fallback/3, struct, state)
+    case run_or_fallback(&module.guard_transition/2, &guard_transition_fallback/3, struct, state) do
+      {:error, cause} -> {:error, cause}
+      _ -> false
+    end
   end
 
   @doc """

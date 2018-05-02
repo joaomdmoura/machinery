@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/joaomdmoura/machinery.svg?branch=master)](https://travis-ci.org/joaomdmoura/machinery)
 [![Ebert](https://ebertapp.io/github/joaomdmoura/machinery.svg)](https://ebertapp.io/github/joaomdmoura/machinery)
+[![Coverage Status](https://coveralls.io/repos/github/joaomdmoura/machinery/badge.svg?branch=master)](https://coveralls.io/github/joaomdmoura/machinery?branch=master)
 
 ![Machinery](https://github.com/joaomdmoura/machinery/blob/master/logo.png)
 
@@ -251,9 +252,9 @@ def guard_transition(struct, "guarded_state") do
 end
 ```
 
-Guard conditions should return a boolean:
-  - `true`: Guard clause will allow the transition.
-  - `false`: Transition won't be allowed.
+Guard conditions will allow the transition if it returns anything other than a tuple with `{:error, "cause"}`:
+  - `{:error, "cause"}`: Transition won't be allowed.
+  - `_` *(anything else)*: Guard clause will allow the transition.
 
 ### Example:
 
@@ -265,9 +266,21 @@ defmodule YourProject.UserStateMachine do
 
   # Guard the transition to the "complete" state.
   def guard_transition(struct, "complete") do
-    Map.get(struct, :missing_fields) == false
+    if Map.get(struct, :missing_fields) == true do
+      {:error, "There are missing fields"}
+    end
   end
 end
+```
+
+When trying to transition an struct that is blocked by its guard clause you will
+have the following return:
+
+```elixir
+blocked_struct = %TestStruct{state: "created", missing_fields: true}
+Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
+
+# {:error, "There are missing fields"}
 ```
 
 ## Before and After callbacks

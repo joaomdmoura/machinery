@@ -13,7 +13,11 @@ defmodule MachineryTest.TestStateMachineWithGuard do
       Machinery.non_existing_function_should_raise_error()
     end
 
-    Map.get(struct, :missing_fields) == false
+    no_missing_fields = Map.get(struct, :missing_fields) == false
+
+    unless no_missing_fields do
+      {:error, "Guard Condition Custom Cause"}
+    end
   end
 
   def log_transition(struct, _next_state) do

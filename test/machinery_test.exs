@@ -38,7 +38,7 @@ defmodule MachineryTest do
 
   test "Guard functions should be executed before moving the resource to the next state" do
     struct = %TestStruct{state: "created", missing_fields: true}
-    assert {:error, "Transition not completed, blocked by guard function."} = Machinery.transition_to(struct, TestStateMachineWithGuard, "completed")
+    assert {:error, _cause} = Machinery.transition_to(struct, TestStateMachineWithGuard, "completed")
   end
 
   test "Guard functions should allow or block transitions" do
@@ -46,7 +46,12 @@ defmodule MachineryTest do
     blocked_struct = %TestStruct{state: "created", missing_fields: true}
 
     assert {:ok, %TestStruct{state: "completed", missing_fields: false}} = Machinery.transition_to(allowed_struct, TestStateMachineWithGuard, "completed")
-    assert {:error, "Transition not completed, blocked by guard function."} = Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
+    assert {:error, _cause} = Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
+  end
+
+  test "Guard functions should return an error cause" do
+    blocked_struct = %TestStruct{state: "created", missing_fields: true}
+    assert {:error, "Guard Condition Custom Cause"} = Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
   end
 
   test "The first declared state should be considered the initial one" do

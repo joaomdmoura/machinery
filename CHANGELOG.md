@@ -1,6 +1,7 @@
 # ChangeLog
 
 ## WIP Version
+- Support for custom error messages on guard functions - [Pull Request](https://github.com/joaomdmoura/machinery/pull/35)
 
 ## 0.15.0
 - Adding support for transitions logging - [Pull Request](https://github.com/joaomdmoura/machinery/pull/33)
