@@ -19,7 +19,7 @@ You can also use it with pure elixir. (without the dashboard)
 Yes? This is not your library. You might be better off with
 another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
 
-Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery).
+Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 
 - [Installing](#installing)
 - [Declaring States](#declaring-states)
