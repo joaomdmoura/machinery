@@ -25,7 +25,7 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 - [Changing States](#changing-states)
 - [Persist State](#persist-state)
 - [Logging Transitions](#logging-transitions)
-- [Enable Dashboard with Phoenix](#enable-dashboard-wiht-phoenix)
+- [Enable Dashboard with Phoenix](#enable-dashboard-with-phoenix)
 - [Guard Functions](#guard-functions)
 - [Before and After Callbacks](#before-and-after-callbacks)
 
