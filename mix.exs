@@ -35,7 +35,7 @@ defmodule Machinery.Mixfile do
       {:phoenix_html, "~> 2.9"},
       {:cowboy, "~> 1.0"},
       {:excoveralls, "~> 0.7", only: :test},
-      {:ecto, "~> 2.1"},
+      {:ecto, "~> 3.0"},
       {:ex_doc, "~> 0.18", only: :dev, runtime: false}
     ]
   end
