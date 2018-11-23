@@ -1,5 +1,7 @@
 defmodule Machinery.Endpoint do
-  @moduledoc false
+  @moduledoc """
+  Endpoint module responsible for plugs and to handle authentication.
+  """
   use Phoenix.Endpoint, otp_app: :machinery
 
   plug Plug.Static,

@@ -2,6 +2,9 @@
 
 ## WIP Version
 
+## 0.16.1
+- Bumping Ecto version - [Pull Request](https://github.com/joaomdmoura/machinery/pull/38)
+
 ## 0.16.0
 - Support for custom error messages on guard functions - [Pull Request](https://github.com/joaomdmoura/machinery/pull/35)
 
