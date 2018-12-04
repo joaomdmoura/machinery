@@ -3,8 +3,8 @@ defmodule MachineryTest do
   doctest Machinery
 
   alias MachineryTest.Helper
-  alias MachineryTest.TestStruct
   alias MachineryTest.TestDefaultFieldStruct
+  alias MachineryTest.TestStruct
   alias MachineryTest.TestStateMachine
   alias MachineryTest.TestStateMachineWithGuard
   alias MachineryTest.TestStateMachineDefaultField
