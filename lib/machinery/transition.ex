@@ -26,7 +26,13 @@ defmodule Machinery.Transition do
   """
   @spec guarded_transition?(module, struct, atom) :: boolean
   def guarded_transition?(module, struct, state) do
-    case run_or_fallback(&module.guard_transition/2, &guard_transition_fallback/3, struct, state) do
+    case run_or_fallback(
+           &module.guard_transition/2,
+           &guard_transition_fallback/4,
+           struct,
+           state,
+           module._field()
+         ) do
       {:error, cause} -> {:error, cause}
       _ -> false
     end
@@ -39,7 +45,13 @@ defmodule Machinery.Transition do
   """
   @spec before_callbacks(struct, atom, module) :: struct
   def before_callbacks(struct, state, module) do
-    run_or_fallback(&module.before_transition/2, &callbacks_fallback/3, struct, state)
+    run_or_fallback(
+      &module.before_transition/2,
+      &callbacks_fallback/4,
+      struct,
+      state,
+      module._field()
+    )
   end
 
   @doc """
@@ -49,7 +61,13 @@ defmodule Machinery.Transition do
   """
   @spec after_callbacks(struct, atom, module) :: struct
   def after_callbacks(struct, state, module) do
-    run_or_fallback(&module.after_transition/2, &callbacks_fallback/3, struct, state)
+    run_or_fallback(
+      &module.after_transition/2,
+      &callbacks_fallback/4,
+      struct,
+      state,
+      module._field()
+    )
   end
 
   @doc """
@@ -59,7 +77,7 @@ defmodule Machinery.Transition do
   """
   @spec persist_struct(struct, atom, module) :: struct
   def persist_struct(struct, state, module) do
-    run_or_fallback(&module.persist/2, &persist_fallback/3, struct, state)
+    run_or_fallback(&module.persist/2, &persist_fallback/4, struct, state, module._field())
   end
 
   @doc """
@@ -68,7 +86,13 @@ defmodule Machinery.Transition do
   """
   @spec log_transition(struct, atom, module) :: struct
   def log_transition(struct, state, module) do
-    run_or_fallback(&module.log_transition/2, &log_transition_fallback/3, struct, state)
+    run_or_fallback(
+      &module.log_transition/2,
+      &log_transition_fallback/4,
+      struct,
+      state,
+      module._field()
+    )
   end
 
   defp matches_wildcard?(transitions, next_state) do
@@ -77,7 +101,7 @@ defmodule Machinery.Transition do
 
   defp matches_transition?(transitions, current_state, next_state) do
     case Map.fetch(transitions, current_state) do
-      {:ok, [_|_] = declared_states} -> Enum.member?(declared_states, next_state)
+      {:ok, [_ | _] = declared_states} -> Enum.member?(declared_states, next_state)
       {:ok, declared_state} -> declared_state == next_state
       :error -> false
     end
@@ -88,22 +112,22 @@ defmodule Machinery.Transition do
   # rescue for a couple of specific Exceptions and passes it forward
   # to the callback, that will re-raise it if not related to
   # guard_transition nor before | after call backs
-  defp run_or_fallback(func, callback, struct, state) do
+  defp run_or_fallback(func, callback, struct, state, field) do
     func.(struct, state)
   rescue
-    error in UndefinedFunctionError -> callback.(struct, state, error)
-    error in FunctionClauseError -> callback.(struct, state, error)
+    error in UndefinedFunctionError -> callback.(struct, state, error, field)
+    error in FunctionClauseError -> callback.(struct, state, error, field)
   end
 
-  defp persist_fallback(struct, state, error) do
-    if error.function  == :persist && error.arity == 2 do
-      Map.put(struct, :state, state)
+  defp persist_fallback(struct, state, error, field) do
+    if error.function == :persist && error.arity == 2 do
+      Map.put(struct, field, state)
     else
       raise error
     end
   end
 
-  defp log_transition_fallback(struct, _state, error) do
+  defp log_transition_fallback(struct, _state, error, _field) do
     if error.function == :log_transition && error.arity == 2 do
       struct
     else
@@ -111,7 +135,7 @@ defmodule Machinery.Transition do
     end
   end
 
-  defp callbacks_fallback(struct, _state, error) do
+  defp callbacks_fallback(struct, _state, error, _field) do
     if error.function in [:after_transition, :before_transition] && error.arity == 2 do
       struct
     else
@@ -122,7 +146,7 @@ defmodule Machinery.Transition do
   # If the exception passed id related to a specific signature of
   # guard_transition/2 it will fallback returning true and
   # allwoing the transition, otherwise it will raise the exception.
-  defp guard_transition_fallback(_struct, _state, error) do
+  defp guard_transition_fallback(_struct, _state, error, _field) do
     if error.function == :guard_transition && error.arity == 2 do
       true
     else

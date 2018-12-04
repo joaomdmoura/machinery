@@ -4,70 +4,99 @@ defmodule MachineryTest do
 
   alias MachineryTest.Helper
   alias MachineryTest.TestStruct
+  alias MachineryTest.TestDefaultFieldStruct
   alias MachineryTest.TestStateMachine
   alias MachineryTest.TestStateMachineWithGuard
+  alias MachineryTest.TestStateMachineDefaultField
 
   test "All internal functions should be injected into AST" do
     assert :erlang.function_exported(TestStateMachine, :_machinery_initial_state, 0)
     assert :erlang.function_exported(TestStateMachine, :_machinery_states, 0)
     assert :erlang.function_exported(TestStateMachine, :_machinery_transitions, 0)
+    assert :erlang.function_exported(TestStateMachine, :_field, 0)
   end
 
   test "Only the declared transitions should be valid" do
-    created_struct = %TestStruct{state: "created", missing_fields: false}
-    partial_struct = %TestStruct{state: "partial", missing_fields: false}
+    created_struct = %TestStruct{my_state: "created", missing_fields: false}
+    partial_struct = %TestStruct{my_state: "partial", missing_fields: false}
     stateless_struct = %TestStruct{}
-    completed_struct = %TestStruct{state: "completed"}
+    completed_struct = %TestStruct{my_state: "completed"}
 
-    assert {:ok, %TestStruct{state: "partial"}} = Machinery.transition_to(created_struct, TestStateMachine, "partial")
-    assert {:ok, %TestStruct{state: "completed", missing_fields: false}} = Machinery.transition_to(created_struct, TestStateMachine, "completed")
-    assert {:ok, %TestStruct{state: "completed", missing_fields: false}} = Machinery.transition_to(partial_struct, TestStateMachine, "completed")
-    assert {:error, "Transition to this state isn't declared."} = Machinery.transition_to(stateless_struct, TestStateMachine, "created")
-    assert {:error, "Transition to this state isn't declared."} = Machinery.transition_to(completed_struct, TestStateMachine, "created")
+    assert {:ok, %TestStruct{my_state: "partial"}} =
+             Machinery.transition_to(created_struct, TestStateMachine, "partial")
+
+    assert {:ok, %TestStruct{my_state: "completed", missing_fields: false}} =
+             Machinery.transition_to(created_struct, TestStateMachine, "completed")
+
+    assert {:ok, %TestStruct{my_state: "completed", missing_fields: false}} =
+             Machinery.transition_to(partial_struct, TestStateMachine, "completed")
+
+    assert {:error, "Transition to this state isn't declared."} =
+             Machinery.transition_to(stateless_struct, TestStateMachine, "created")
+
+    assert {:error, "Transition to this state isn't declared."} =
+             Machinery.transition_to(completed_struct, TestStateMachine, "created")
   end
 
   test "Wildcard transitions should be valid" do
-    created_struct = %TestStruct{state: "created", missing_fields: false}
-    partial_struct = %TestStruct{state: "partial", missing_fields: false}
-    completed_struct = %TestStruct{state: "completed"}
+    created_struct = %TestStruct{my_state: "created", missing_fields: false}
+    partial_struct = %TestStruct{my_state: "partial", missing_fields: false}
+    completed_struct = %TestStruct{my_state: "completed"}
 
-    assert {:ok, %TestStruct{state: "canceled", missing_fields: false}} = Machinery.transition_to(created_struct, TestStateMachine, "canceled")
-    assert {:ok, %TestStruct{state: "canceled", missing_fields: false}} = Machinery.transition_to(partial_struct, TestStateMachine, "canceled")
-    assert {:ok, %TestStruct{state: "canceled"}} = Machinery.transition_to(completed_struct, TestStateMachine, "canceled")
+    assert {:ok, %TestStruct{my_state: "canceled", missing_fields: false}} =
+             Machinery.transition_to(created_struct, TestStateMachine, "canceled")
+
+    assert {:ok, %TestStruct{my_state: "canceled", missing_fields: false}} =
+             Machinery.transition_to(partial_struct, TestStateMachine, "canceled")
+
+    assert {:ok, %TestStruct{my_state: "canceled"}} =
+             Machinery.transition_to(completed_struct, TestStateMachine, "canceled")
   end
 
   test "Guard functions should be executed before moving the resource to the next state" do
-    struct = %TestStruct{state: "created", missing_fields: true}
-    assert {:error, _cause} = Machinery.transition_to(struct, TestStateMachineWithGuard, "completed")
+    struct = %TestStruct{my_state: "created", missing_fields: true}
+
+    assert {:error, _cause} =
+             Machinery.transition_to(struct, TestStateMachineWithGuard, "completed")
   end
 
   test "Guard functions should allow or block transitions" do
-    allowed_struct = %TestStruct{state: "created", missing_fields: false}
-    blocked_struct = %TestStruct{state: "created", missing_fields: true}
+    allowed_struct = %TestStruct{my_state: "created", missing_fields: false}
+    blocked_struct = %TestStruct{my_state: "created", missing_fields: true}
 
-    assert {:ok, %TestStruct{state: "completed", missing_fields: false}} = Machinery.transition_to(allowed_struct, TestStateMachineWithGuard, "completed")
-    assert {:error, _cause} = Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
+    assert {:ok, %TestStruct{my_state: "completed", missing_fields: false}} =
+             Machinery.transition_to(allowed_struct, TestStateMachineWithGuard, "completed")
+
+    assert {:error, _cause} =
+             Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
   end
 
   test "Guard functions should return an error cause" do
-    blocked_struct = %TestStruct{state: "created", missing_fields: true}
-    assert {:error, "Guard Condition Custom Cause"} = Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
+    blocked_struct = %TestStruct{my_state: "created", missing_fields: true}
+
+    assert {:error, "Guard Condition Custom Cause"} =
+             Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
   end
 
   test "The first declared state should be considered the initial one" do
     stateless_struct = %TestStruct{}
-    assert {:ok, %TestStruct{state: "partial"}} = Machinery.transition_to(stateless_struct, TestStateMachine, "partial")
+
+    assert {:ok, %TestStruct{my_state: "partial"}} =
+             Machinery.transition_to(stateless_struct, TestStateMachine, "partial")
   end
 
   test "Modules without guard conditions should allow transitions by default" do
-    struct = %TestStruct{state: "created"}
-    assert {:ok, %TestStruct{state: "completed"}} = Machinery.transition_to(struct, TestStateMachine, "completed")
+    struct = %TestStruct{my_state: "created"}
+
+    assert {:ok, %TestStruct{my_state: "completed"}} =
+             Machinery.transition_to(struct, TestStateMachine, "completed")
   end
 
   @tag :capture_log
   test "Implict rescue on the guard clause internals should raise any other excepetion not strictly related to missing guard_tranistion/2 existence" do
-    wrong_struct = %TestStruct{state: "created", force_exception: true}
-    assert_raise UndefinedFunctionError, fn() ->
+    wrong_struct = %TestStruct{my_state: "created", force_exception: true}
+
+    assert_raise UndefinedFunctionError, fn ->
       Machinery.transition_to(wrong_struct, TestStateMachineWithGuard, "completed")
     end
   end
@@ -85,34 +114,37 @@ defmodule MachineryTest do
 
   @tag :capture_log
   test "Implict rescue on the callbacks internals should raise any other excepetion not strictly related to missing callbacks_fallback/2 existence" do
-    wrong_struct = %TestStruct{state: "created", force_exception: true}
-    assert_raise UndefinedFunctionError, fn() ->
+    wrong_struct = %TestStruct{my_state: "created", force_exception: true}
+
+    assert_raise UndefinedFunctionError, fn ->
       Machinery.transition_to(wrong_struct, TestStateMachine, "partial")
     end
   end
 
   test "Persist function should be called after the transition" do
-    struct = %TestStruct{state: "partial"}
+    struct = %TestStruct{my_state: "partial"}
     assert {:ok, _} = Machinery.transition_to(struct, TestStateMachine, "completed")
   end
 
   @tag :capture_log
   test "Persist function should still reaise errors if not related to the existence of persist/1 method" do
-    wrong_struct = %TestStruct{state: "created", force_exception: true}
-    assert_raise UndefinedFunctionError, fn() ->
+    wrong_struct = %TestStruct{my_state: "created", force_exception: true}
+
+    assert_raise UndefinedFunctionError, fn ->
       Machinery.transition_to(wrong_struct, TestStateMachine, "completed")
     end
   end
 
   test "Transition log function should be called after the transition" do
-    struct = %TestStruct{state: "created"}
+    struct = %TestStruct{my_state: "created"}
     assert {:ok, _} = Machinery.transition_to(struct, TestStateMachineWithGuard, "partial")
   end
 
   @tag :capture_log
   test "Transition log function should still reaise errors if not related to the existence of persist/1 method" do
-    wrong_struct = %TestStruct{state: "created", force_exception: true}
-    assert_raise UndefinedFunctionError, fn() ->
+    wrong_struct = %TestStruct{my_state: "created", force_exception: true}
+
+    assert_raise UndefinedFunctionError, fn ->
       Machinery.transition_to(wrong_struct, TestStateMachineWithGuard, "partial")
     end
   end
@@ -128,5 +160,12 @@ defmodule MachineryTest do
     Helper.mahcinery_interface()
     endpoint_pid = Process.whereis(Machinery.Endpoint)
     assert Process.alive?(endpoint_pid)
+  end
+
+  test "Should use default state name if not specified" do
+    struct = %TestDefaultFieldStruct{state: "created"}
+
+    assert {:ok, %TestDefaultFieldStruct{state: "canceled"}} =
+             Machinery.transition_to(struct, TestStateMachineDefaultField, "canceled")
   end
 end

@@ -3,7 +3,7 @@ defmodule MachineryTest.TestStruct do
   use Ecto.Schema
 
   schema "test_structs" do
-    field :state, :string
+    field :my_state, :string
     field :missing_fields, :boolean
     field :force_exception, :boolean
     timestamps()
@@ -11,6 +11,6 @@ defmodule MachineryTest.TestStruct do
 
   @doc false
   def changeset(test_struct, attrs) do
-    cast(test_struct, attrs, [:state, :missing_fields, :force_exception])
+    cast(test_struct, attrs, [:my_state, :missing_fields, :force_exception])
   end
 end

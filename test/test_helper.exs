@@ -2,8 +2,10 @@ ExUnit.start()
 
 # Load support modules
 Code.load_file("test/support/test_struct.exs")
+Code.load_file("test/support/test_default_field_struct.exs")
 Code.load_file("test/support/test_state_machine.exs")
 Code.load_file("test/support/test_state_machine_with_guard.exs")
+Code.load_file("test/support/test_state_machine_default_field.exs")
 Code.load_file("test/support/test_repo.exs")
 
 defmodule MachineryTest.Helper do
@@ -19,9 +21,11 @@ defmodule MachineryTest.Helper do
     Application.put_env(:machinery, :model, TestStruct)
     Application.put_env(:machinery, :repo, TestRepo)
     Application.put_env(:machinery, :interface, enable)
-    capture_log fn ->
+
+    capture_log(fn ->
       restart_machinery()
-    end
+    end)
+
     :ok
   end
 
@@ -30,6 +34,7 @@ defmodule MachineryTest.Helper do
     supervisor_pid = Process.whereis(Machinery.Supervisor)
     Process.monitor(supervisor_pid)
     Process.exit(supervisor_pid, :kill)
+
     receive do
       _ ->
         :timer.sleep(1500)
