@@ -45,20 +45,22 @@ defmodule Machinery do
   P.S. The first state declared will be considered the intial state
   """
   defmacro __using__(opts) do
+    field = Keyword.get(opts, :field, :state)
     states = Keyword.get(opts, :states)
     transitions = Keyword.get(opts, :transitions)
 
     # Quoted response to be inserted on the abstract syntax tree (AST) of
     # the module that imported this using `use`.
     quote bind_quoted: [
-      states: states,
-      transitions: transitions
-    ] do
-
+            field: field,
+            states: states,
+            transitions: transitions
+          ] do
       # Functions to hold and expose internal info of the states.
       def _machinery_initial_state(), do: List.first(unquote(states))
       def _machinery_states(), do: unquote(states)
       def _machinery_transitions(), do: unquote(Macro.escape(transitions))
+      def _field(), do: unquote(field)
     end
   end
 
@@ -69,13 +71,14 @@ defmodule Machinery do
   that uses Phoenix.Endpoint to expose new routes related to Machinery.
   """
   def start(_type, _args) do
-    children = if Application.get_env(:machinery, :interface) do
-      import Supervisor.Spec, warn: false
-      :ets.new(:machinery_session, [:named_table, :public, read_concurrency: true])
-      [supervisor(Machinery.Endpoint, [])]
-    else
-      []
-    end
+    children =
+      if Application.get_env(:machinery, :interface) do
+        import Supervisor.Spec, warn: false
+        :ets.new(:machinery_session, [:named_table, :public, read_concurrency: true])
+        [supervisor(Machinery.Endpoint, [])]
+      else
+        []
+      end
 
     children = [{Machinery.Transitions, name: Machinery.Transitions} | children]
     opts = [strategy: :one_for_one, name: Machinery.Supervisor]
@@ -99,7 +102,7 @@ defmodule Machinery do
       Machinery.transition_to(%User{state: :partial}, UserStateMachine, :completed)
       {:ok, %User{state: :completed}}
   """
-  @spec transition_to(struct, module, String.t) :: {:ok, struct} | {:error, String.t}
+  @spec transition_to(struct, module, String.t()) :: {:ok, struct} | {:error, String.t()}
   def transition_to(struct, state_machine_module, next_state) do
     GenServer.call(Machinery.Transitions, {
       :run,
@@ -118,5 +121,6 @@ defmodule Machinery do
     |> elem(0)
     |> deep_first_of_tuple
   end
+
   defp deep_first_of_tuple(value), do: value
 end

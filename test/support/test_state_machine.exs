@@ -1,5 +1,6 @@
 defmodule MachineryTest.TestStateMachine do
   use Machinery,
+    field: :my_state,
     states: ["created", "partial", "completed", "canceled"],
     transitions: %{
       "created" => ["partial", "completed"],
@@ -28,6 +29,6 @@ defmodule MachineryTest.TestStateMachine do
       Machinery.non_existing_function_should_raise_error()
     end
 
-    Map.put(struct, :state, next_state)
+    Map.put(struct, :my_state, next_state)
   end
 end

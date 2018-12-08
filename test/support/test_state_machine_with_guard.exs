@@ -1,5 +1,6 @@
 defmodule MachineryTest.TestStateMachineWithGuard do
   use Machinery,
+    field: :my_state,
     states: ["created", "partial", "completed"],
     transitions: %{
       "created" => ["partial", "completed"],
