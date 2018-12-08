@@ -42,10 +42,10 @@ def deps do
 end
 ```
 
-Create a field `state` for the module you want to have a state machine,
-make sure you have declared it as part of you `defstruct`, or if it
-is a Phoenix model make sure you add it to the `schema`, as a `string`,  and
-to the `changeset/2`:
+Create a field `state` (or a name of your choice to be defined later) for the
+module you want to have a state machine, make sure you have declared it as part
+of you `defstruct`, or if it is a Phoenix model make sure you add it to the `schema`,
+as a `string`,  and to the `changeset/2`:
 
 ```elixir
 defmodule YourProject.User do
@@ -72,8 +72,9 @@ It's strongly recommended that you create a new module for your State Machine
 logic. So let's say you want to add it to your `User` model, you should create a
 `UserStateMachine` module to hold your State Machine logic.
 
-Machinery expects a `Keyword` as argument with two keys `states` and `transitions`.
+Machinery expects a `Keyword` as argument with the keys `field`, `states` and `transitions`.
 
+- `field`: An atom of your state field name (defaults to `state`)
 - `states`: A List of Strings representing each state.
 - `transitions`: A Map for each state and it allowed next state(s).
 
@@ -84,6 +85,7 @@ defmodule YourProject.UserStateMachine do
   use Machinery,
     # The first state declared will be considered
     # the initial state
+    field: :custom_state_name,
     states: ["created", "partial", "complete", "canceled"],
     transitions: %{
       "created" =>  ["partial", "complete"],
