@@ -2,6 +2,9 @@
 
 ## WIP Version
 
+## 0.17.0
+- Allow field name customization - [Pull Request](https://github.com/joaomdmoura/machinery/pull/42)
+
 ## 0.16.1
 - Bumping Ecto version - [Pull Request](https://github.com/joaomdmoura/machinery/pull/38)
 
