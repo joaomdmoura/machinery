@@ -26,7 +26,7 @@ defmodule Machinery.Transitions do
 
     # Getting current state of the struct or falling back to the
     # first declared state on the struct model.
-    current_state = case Map.get(struct, :state) do
+    current_state = case Map.get(struct, state_machine_module._field()) do
       nil -> initial_state
       current_state -> current_state
     end
