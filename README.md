@@ -90,7 +90,7 @@ defmodule YourProject.UserStateMachine do
     transitions: %{
       "created" =>  ["partial", "complete"],
       "partial" => "completed",
-      "*" => "canceled
+      "*" => "canceled"
     }
 end
 ```
