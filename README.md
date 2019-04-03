@@ -236,7 +236,7 @@ config :machinery,
 ```
 
 That's it, now you can start you Phoenix app and navigates
-to `http://localhost:4000/machinery`, or whatever custou routes you have mounted
+to `http://localhost:4000/machinery`, or whatever custom routes you have mounted
 the dashboard at.
 
 ## Guard functions
