@@ -4,10 +4,10 @@ defmodule MachineryTest do
 
   alias MachineryTest.Helper
   alias MachineryTest.TestDefaultFieldStruct
-  alias MachineryTest.TestStruct
   alias MachineryTest.TestStateMachine
-  alias MachineryTest.TestStateMachineWithGuard
   alias MachineryTest.TestStateMachineDefaultField
+  alias MachineryTest.TestStateMachineWithGuard
+  alias MachineryTest.TestStruct
 
   setup do
     Helper.machinery_interface()

@@ -11,9 +11,9 @@ Code.load_file("test/support/test_repo.exs")
 defmodule MachineryTest.Helper do
   import ExUnit.CaptureLog
 
+  alias MachineryTest.TestRepo
   alias MachineryTest.TestStateMachine
   alias MachineryTest.TestStruct
-  alias MachineryTest.TestRepo
 
   @doc false
   def machinery_interface(enable \\ true) do
