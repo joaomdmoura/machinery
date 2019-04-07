@@ -23,10 +23,11 @@ defmodule Machinery.Transitions do
   def handle_call({:run, struct, state_machine_module, next_state}, _from, states) do
     initial_state = state_machine_module._machinery_initial_state()
     transitions = state_machine_module._machinery_transitions()
+    state_field = state_machine_module._field()
 
     # Getting current state of the struct or falling back to the
     # first declared state on the struct model.
-    current_state = case Map.get(struct, :state) do
+    current_state = case Map.get(struct, state_field) do
       nil -> initial_state
       current_state -> current_state
     end
