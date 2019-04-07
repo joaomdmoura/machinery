@@ -7,7 +7,7 @@ defmodule MachineryTest.ResourceControllerTest do
   alias MachineryTest.Helper
 
   setup_all do
-    Helper.mahcinery_interface()
+    Helper.machinery_interface()
   end
 
   @tag :capture_log

@@ -4,7 +4,7 @@ defmodule MachineryTest.PlugTest do
   alias MachineryTest.Helper
 
   setup_all do
-    Helper.mahcinery_interface()
+    Helper.machinery_interface()
   end
 
   @tag :capture_log
@@ -14,7 +14,7 @@ defmodule MachineryTest.PlugTest do
   end
 
   @tag :capture_log
-  test "Machinery.Plug should send the request to Mahcinery.PageControlller the if `interface` is set as true" do
+  test "Machinery.Plug should send the request to Machinery.ResourceControlller the if `interface` is set as true" do
     conn = Machinery.Plug.call(conn(:get, "/"), "/")
     assert conn.state == :sent
     assert conn.status == 200
@@ -22,7 +22,7 @@ defmodule MachineryTest.PlugTest do
   end
 
   @tag :capture_log
-  test "Machinery.Plug shoudl fall back to its default path defined as `/machinery` if none is provided" do
+  test "Machinery.Plug should fall back to its default path defined as `/machinery` if none is provided" do
     conn = Machinery.Plug.call(conn(:get, "/machinery"), [])
     assert conn.state == :sent
     assert conn.status == 200

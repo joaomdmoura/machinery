@@ -143,7 +143,7 @@ defmodule Machinery.Transition do
     end
   end
 
-  # If the exception passed id related to a specific signature of
+  # If the exception passed is related to a specific signature of
   # guard_transition/2 it will fallback returning true and
   # allwoing the transition, otherwise it will raise the exception.
   defp guard_transition_fallback(_struct, _state, error, _field) do
