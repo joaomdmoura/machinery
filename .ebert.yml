@@ -11,7 +11,7 @@ engines:
   credo:
     enabled: true
   fixme:
-    enabled: true
+    enabled: false
   eslint:
     enabled: true
   csslint:

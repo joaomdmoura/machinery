@@ -2,9 +2,9 @@ defmodule MachineryTest.ResourceControllerTest do
   use ExUnit.Case, async: false
   use Plug.Test
 
-  alias MachineryTest.TestStateMachine
-  alias MachineryTest.TestRepo
   alias MachineryTest.Helper
+  alias MachineryTest.TestRepo
+  alias MachineryTest.TestStateMachine
 
   setup_all do
     Helper.machinery_interface()
@@ -78,8 +78,6 @@ defmodule MachineryTest.ResourceControllerTest do
 
   defp stringify_keys(nil), do: nil
   defp stringify_keys(%{} = map) do
-    map
-    |> Enum.map(fn {k, v} -> {Atom.to_string(k), v} end)
-    |> Enum.into(%{})
+    Enum.into(map, %{}, fn {k, v} -> {Atom.to_string(k), v} end)
   end
 end
