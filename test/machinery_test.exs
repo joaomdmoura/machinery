@@ -9,6 +9,10 @@ defmodule MachineryTest do
   alias MachineryTest.TestStateMachineWithGuard
   alias MachineryTest.TestStateMachineDefaultField
 
+  setup do
+    Helper.machinery_interface()
+  end
+
   test "All internal functions should be injected into AST" do
     assert :erlang.function_exported(TestStateMachine, :_machinery_initial_state, 0)
     assert :erlang.function_exported(TestStateMachine, :_machinery_states, 0)
@@ -127,7 +131,7 @@ defmodule MachineryTest do
   end
 
   @tag :capture_log
-  test "Persist function should still reaise errors if not related to the existence of persist/1 method" do
+  test "Persist function should still raise errors if not related to the existence of persist/1 method" do
     wrong_struct = %TestStruct{my_state: "created", force_exception: true}
 
     assert_raise UndefinedFunctionError, fn ->
@@ -135,18 +139,18 @@ defmodule MachineryTest do
     end
   end
 
-  test "Transition log function should be called after the transition" do
-    struct = %TestStruct{my_state: "created"}
-    assert {:ok, _} = Machinery.transition_to(struct, TestStateMachineWithGuard, "partial")
-  end
-
   @tag :capture_log
-  test "Transition log function should still reaise errors if not related to the existence of persist/1 method" do
+  test "Transition log function should still raise errors if not related to the existence of persist/1 method" do
     wrong_struct = %TestStruct{my_state: "created", force_exception: true}
 
     assert_raise UndefinedFunctionError, fn ->
       Machinery.transition_to(wrong_struct, TestStateMachineWithGuard, "partial")
     end
+  end
+
+  test "Transition log function should be called after the transition" do
+    struct = %TestStruct{my_state: "created"}
+    assert {:ok, _} = Machinery.transition_to(struct, TestStateMachineWithGuard, "partial")
   end
 
   @tag :capture_log
@@ -157,7 +161,7 @@ defmodule MachineryTest do
 
   @tag :capture_log
   test "Machinery.Endpoint should be started under the Machinery.Supervisor if env var `interface` is set to true" do
-    Helper.mahcinery_interface()
+    Helper.machinery_interface()
     endpoint_pid = Process.whereis(Machinery.Endpoint)
     assert Process.alive?(endpoint_pid)
   end
