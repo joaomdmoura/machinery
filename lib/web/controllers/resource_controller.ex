@@ -21,8 +21,9 @@ defmodule Machinery.ResourceController do
   def index(conn, %{"state" => state, "page" => page} = _params) do
     repo = conn.assigns.repo
     model = conn.assigns.model
+    machinery_module = conn.assigns.module
     page = String.to_integer(page)
-    resources = get_resources_for_state(repo, model, state, page)
+    resources = get_resources_for_state(repo, model, state, machinery_module, page)
     json(conn, resources)
   end
   def index(conn, _params) do
@@ -36,7 +37,7 @@ defmodule Machinery.ResourceController do
     end
 
     states_and_resources = Enum.map(desired_states, fn(state) ->
-      resources = get_resources_for_state(repo, model, state)
+      resources = get_resources_for_state(repo, model, state, machinery_module)
       %{name: state, resources: resources}
     end)
 
@@ -50,11 +51,12 @@ defmodule Machinery.ResourceController do
       |> render("index.html")
   end
 
-  defp get_resources_for_state(repo, model, state, page \\ 1) do
+  defp get_resources_for_state(repo, model, state, machinery_module, page \\ 1) do
+    state_field = machinery_module._field
     fields =  model.__schema__(:fields)
     query = from resource in model,
       select: map(resource, ^fields),
-      where: resource.state == ^state,
+      where: field(resource, ^state_field) == ^state,
       limit: @items_per_page,
       offset: ^(@items_per_page * (page - 1))
 
