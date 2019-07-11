@@ -194,8 +194,8 @@ This is how it looks like:
 
 ![Mahcinery Dashboard Example](https://imgur.com/D5Ko9xP.gif)
 
-To enbale the Dashboard you will need to add the Machinery Plug
-to you application Endpoint module.
+To enable the Dashboard you will need to add the Machinery Plug
+to your application Endpoint module.
 
 ```elixir
 defmodule YourApp.Endpoint do
