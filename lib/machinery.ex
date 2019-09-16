@@ -109,7 +109,7 @@ defmodule Machinery do
       struct,
       state_machine_module,
       next_state
-    })
+    }, :infinity)
   catch
     :exit, error_tuple ->
       exception = deep_first_of_tuple(error_tuple)
