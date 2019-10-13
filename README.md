@@ -1,7 +1,7 @@
 # Machinery
 
 [![Build Status](https://travis-ci.org/joaomdmoura/machinery.svg?branch=master)](https://travis-ci.org/joaomdmoura/machinery)
-[![Ebert](https://ebertapp.io/github/joaomdmoura/machinery.svg)](https://ebertapp.io/github/joaomdmoura/machinery)
+[![Ebert](https://app.sourcelevel.io/github/joaomdmoura/machinery.svg)](https://app.sourcelevel.io/github/joaomdmoura/machinery)
 [![Coverage Status](https://coveralls.io/repos/github/joaomdmoura/machinery/badge.svg?branch=master)](https://coveralls.io/github/joaomdmoura/machinery?branch=master)
 
 ![Machinery](https://github.com/joaomdmoura/machinery/blob/master/logo.png)
