@@ -159,13 +159,6 @@ defmodule MachineryTest do
     assert Process.alive?(transitions_pid)
   end
 
-  @tag :capture_log
-  test "Machinery.Endpoint should be started under the Machinery.Supervisor if env var `interface` is set to true" do
-    Helper.machinery_interface()
-    endpoint_pid = Process.whereis(Machinery.Endpoint)
-    assert Process.alive?(endpoint_pid)
-  end
-
   test "Should use default state name if not specified" do
     struct = %TestDefaultFieldStruct{state: "created"}
 

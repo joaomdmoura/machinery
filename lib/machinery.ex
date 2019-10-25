@@ -71,16 +71,7 @@ defmodule Machinery do
   that uses Phoenix.Endpoint to expose new routes related to Machinery.
   """
   def start(_type, _args) do
-    children =
-      if Application.get_env(:machinery, :interface) do
-        import Supervisor.Spec, warn: false
-        :ets.new(:machinery_session, [:named_table, :public, read_concurrency: true])
-        [supervisor(Machinery.Endpoint, [])]
-      else
-        []
-      end
-
-    children = [{Machinery.Transitions, name: Machinery.Transitions} | children]
+    children = [{Machinery.Transitions, name: Machinery.Transitions}]
     opts = [strategy: :one_for_one, name: Machinery.Supervisor]
     Supervisor.start_link(children, opts)
   end
