@@ -80,9 +80,11 @@ Machinery expects a `Keyword` as argument with the keys `field`, `states` and `t
 ```elixir
 defmodule YourProject.UserStateMachine do
   use Machinery,
-    # The first state declared will be considered
-    # the initial state
+    # This is a way to define a custom fielt, if not defined
+    # it will expect the default `state` field in the struct
     field: :custom_state_name,
+    # The first state declared will be considered
+    # the initial state.
     states: ["created", "partial", "complete", "canceled"],
     transitions: %{
       "created" =>  ["partial", "complete"],
