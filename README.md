@@ -11,9 +11,6 @@ Phoenix out of the box.
 
 It's just a small layer that provides a DSL for declaring states
 and having guard clauses + callbacks for structs in general.
-It also aims to have (when implemented with Phoenix) an optional
-build-in GUI that will represent each resource's state.
-You can also use it with pure elixir. (without the dashboard)
 
 ### Do you always need a state machine to be a process?
 Yes? This is not your library. You might be better off with
@@ -26,7 +23,6 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 - [Changing States](#changing-states)
 - [Persist State](#persist-state)
 - [Logging Transitions](#logging-transitions)
-- [Enable Dashboard with Phoenix](#enable-dashboard-with-phoenix)
 - [Guard Functions](#guard-functions)
 - [Before and After Callbacks](#before-and-after-callbacks)
 
@@ -183,62 +179,6 @@ defmodule YourProject.UserStateMachine do
   end
 end
 ```
-
-## Enable Dashboard with Phoenix
-
-In case you're using Phoenix and want visual dashboard representing your state
-machine (its states and each resource), you can easily have it.
-It will also enable you to change states by tragging item from one state
-to another.
-This is how it looks like:
-
-![Mahcinery Dashboard Example](https://imgur.com/D5Ko9xP.gif)
-
-To enable the Dashboard you will need to add the Machinery Plug
-to your application Endpoint module.
-
-```elixir
-defmodule YourApp.Endpoint do
-  # ...
-
-  # It accepts the path you want to mount the dashboard at as an argument,
-  # it will mount it under `/machinery` as default.
-  plug Machinery.Plug
-  # plug Machinery.Plug, '/my-custom-route'
-
-  # ...
-end
-```
-
-You will also need to add some config to your `config.exs`:
-
-- `interface`: a flag to enable the dashbord.
-- `repo`: your app's repo module.
-- `model`: the model that will hold the state.
-- `module`: the machinery module where you have the declared states.
-- *(Optional)* `dashboard_states`: A list of the states you want on the dashboard.
-- *(Optional)* `authorization`: Keyword list.
-  - `username`: username for basic auth.
-  - `password`: password for basic auth.
-  - `realm`: real for the basic auth.
-
-```elixir
-config :machinery,
-  interface: true,
-  repo: YourApp.Repo,
-  model: YourApp.User,
-  module: YourApp.UserStateMachine,
-  # Optional: dashboard_states: ["created", "partial"],
-  # Optional: authorization: [
-  #  username: "admin",
-  #  password: "simple_password",
-  #  realm: "machinery"
-  # ]
-```
-
-That's it, now you can start you Phoenix app and navigates
-to `http://localhost:4000/machinery`, or whatever custom routes you have mounted
-the dashboard at.
 
 ## Guard functions
 Create guard conditions by adding signatures of the `guard_transition/2`
