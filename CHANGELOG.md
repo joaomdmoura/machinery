@@ -2,6 +2,19 @@
 
 ## WIP Version
 
+## 1.0.0
+- Fixing overall TYPOs
+[Pull Request#1](https://github.com/joaomdmoura/machinery/pull/45)
+[Pull Request#2](https://github.com/joaomdmoura/machinery/pull/49)
+[Pull Request#3](https://github.com/joaomdmoura/machinery/pull/56)
+[Pull Request#4](https://github.com/joaomdmoura/machinery/pull/65)
+[Pull Request#5](https://github.com/joaomdmoura/machinery/pull/61)
+- Delegate json_decoder config to phoenix - [Pull Request](https://github.com/joaomdmoura/machinery/pull/47)
+- Fixing flaky tests - [Pull Request](https://github.com/joaomdmoura/machinery/pull/50)
+- Remove Pheonix dependency (and dashboard feature) - [Pull Request](https://github.com/joaomdmoura/machinery/pull/55)
+- Resolve Machinery GenServer Get Timeout - [Pull Request](https://github.com/joaomdmoura/machinery/pull/58)
+
+
 ## 0.17.0
 - Allow field name customization - [Pull Request](https://github.com/joaomdmoura/machinery/pull/42)
 

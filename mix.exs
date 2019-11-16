@@ -4,7 +4,7 @@ defmodule Machinery.Mixfile do
   def project do
     [
       app: :machinery,
-      version: "0.17.0",
+      version: "1.0.0",
       elixir: "~> 1.5",
       deps: deps(),
       compilers: Mix.compilers,
