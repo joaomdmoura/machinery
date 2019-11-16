@@ -1,7 +1,7 @@
 # Contributing
 
 If you want to help Machinery development we recommend you to start by checking its 
-[existgin Issues](https://github.com/joaomdmoura/machinery/issues).
+[existing Issues](https://github.com/joaomdmoura/machinery/issues).
 
 You may also want to start with something small like updating docs or the README.
 
