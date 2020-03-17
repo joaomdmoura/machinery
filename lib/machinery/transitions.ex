@@ -35,23 +35,24 @@ defmodule Machinery.Transitions do
     # Checking declared transitions and guard functions before
     # actually updating the struct and retuning the tuple.
     declared_transition? = Transition.declared_transition?(transitions, current_state, next_state)
-    guarded_transition? = Transition.guarded_transition?(state_machine_module, struct, next_state)
 
-    response = cond do
-      !declared_transition? ->
+    response =
+      if declared_transition? do
+        guarded_transition? = Transition.guarded_transition?(state_machine_module, struct, next_state)
+
+        if guarded_transition? do
+          guarded_transition?
+        else
+          struct = struct
+            |> Transition.before_callbacks(next_state, state_machine_module)
+            |> Transition.persist_struct(next_state, state_machine_module)
+            |> Transition.log_transition(next_state, state_machine_module)
+            |> Transition.after_callbacks(next_state, state_machine_module)
+          {:ok, struct}
+        end
+      else
         {:error, @not_declated_error}
-
-      guarded_transition? ->
-        guarded_transition?
-
-      true ->
-        struct = struct
-          |> Transition.before_callbacks(next_state, state_machine_module)
-          |> Transition.persist_struct(next_state, state_machine_module)
-          |> Transition.log_transition(next_state, state_machine_module)
-          |> Transition.after_callbacks(next_state, state_machine_module)
-        {:ok, struct}
-    end
+      end
     {:reply, response, states}
   end
 end
