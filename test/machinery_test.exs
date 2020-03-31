@@ -57,6 +57,14 @@ defmodule MachineryTest do
              Machinery.transition_to(completed_struct, TestStateMachine, "canceled")
   end
 
+  test "Guard functions should not be executed if the transition is invalid" do
+    IO.inspect("hh")
+    struct = %TestStruct{my_state: "created", missing_fields: true, force_exception: true}
+
+    assert {:error, _cause} =
+             Machinery.transition_to(struct, TestStateMachineWithGuard, "canceled")
+  end
+
   test "Guard functions should be executed before moving the resource to the next state" do
     struct = %TestStruct{my_state: "created", missing_fields: true}
 
