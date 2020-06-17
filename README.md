@@ -88,7 +88,7 @@ defmodule YourProject.UserStateMachine do
     states: ["created", "partial", "complete", "canceled"],
     transitions: %{
       "created" =>  ["partial", "complete"],
-      "partial" => "completed",
+      "partial" => "complete",
       "*" => "canceled"
     }
 end
