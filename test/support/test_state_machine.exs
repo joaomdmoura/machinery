@@ -8,7 +8,7 @@ defmodule MachineryTest.TestStateMachine do
       "*" => "canceled"
     }
 
-  def before_transition(struct, "partial") do
+  def before_transition(struct, "partial", _extra) do
     # Code to simulate and force an exception inside a
     # guard function.
     if Map.get(struct, :force_exception) do
@@ -18,11 +18,11 @@ defmodule MachineryTest.TestStateMachine do
     Map.put(struct, :missing_fields, true)
   end
 
-  def after_transition(struct, "completed") do
+  def after_transition(struct, "completed", _extra) do
     Map.put(struct, :missing_fields, false)
   end
 
-  def persist(struct, next_state) do
+  def persist(struct, next_state, _extra) do
     # Code to simulate and force an exception inside a
     # guard function.
     if Map.get(struct, :force_exception) do

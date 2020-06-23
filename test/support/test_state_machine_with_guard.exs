@@ -7,10 +7,11 @@ defmodule MachineryTest.TestStateMachineWithGuard do
       "partial" => "completed"
     }
 
-  def guard_transition(struct, "completed") do
+  def guard_transition(struct, "completed", _extra) do
     # Code to simulate and force an exception inside a
     # guard function.
     if Map.get(struct, :force_exception) do
+      IO.inspect "raising"
       Machinery.non_existing_function_should_raise_error()
     end
 
@@ -21,7 +22,7 @@ defmodule MachineryTest.TestStateMachineWithGuard do
     end
   end
 
-  def log_transition(struct, _next_state) do
+  def log_transition(struct, _next_state, _extra) do
     # Log transition here
     if Map.get(struct, :force_exception) do
       Machinery.non_existing_function_should_raise_error()

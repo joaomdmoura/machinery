@@ -20,7 +20,7 @@ defmodule Machinery.Transitions do
   end
 
   @doc false
-  def handle_call({:run, struct, state_machine_module, next_state}, _from, states) do
+  def handle_call({:run, struct, state_machine_module, next_state, extra}, _from, states) do
     initial_state = state_machine_module._machinery_initial_state()
     transitions = state_machine_module._machinery_transitions()
     state_field = state_machine_module._field()
@@ -35,7 +35,8 @@ defmodule Machinery.Transitions do
     # Checking declared transitions and guard functions before
     # actually updating the struct and retuning the tuple.
     declared_transition? = Transition.declared_transition?(transitions, current_state, next_state)
-    guarded_transition? = Transition.guarded_transition?(state_machine_module, struct, next_state)
+    guarded_transition? = Transition.guarded_transition?(state_machine_module, struct, next_state, extra)
+    # IO.inspect "guarded? #{guarded_transition?}"
 
     response = cond do
       !declared_transition? ->
@@ -46,10 +47,10 @@ defmodule Machinery.Transitions do
 
       true ->
         struct = struct
-          |> Transition.before_callbacks(next_state, state_machine_module)
-          |> Transition.persist_struct(next_state, state_machine_module)
-          |> Transition.log_transition(next_state, state_machine_module)
-          |> Transition.after_callbacks(next_state, state_machine_module)
+          |> Transition.before_callbacks(next_state, state_machine_module, extra)
+          |> Transition.persist_struct(next_state, state_machine_module, extra)
+          |> Transition.log_transition(next_state, state_machine_module, extra)
+          |> Transition.after_callbacks(next_state, state_machine_module, extra)
         {:ok, struct}
     end
     {:reply, response, states}
