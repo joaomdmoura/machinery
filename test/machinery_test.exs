@@ -58,7 +58,6 @@ defmodule MachineryTest do
   end
 
   test "Guard functions should not be executed if the transition is invalid" do
-    IO.inspect("hh")
     struct = %TestStruct{my_state: "created", missing_fields: true, force_exception: true}
 
     assert {:error, _cause} =

@@ -38,42 +38,26 @@ defmodule Machinery.Transitions do
     declared_transition? = Transition.declared_transition?(transitions, current_state, next_state)
 
     response =
-<<<<<<< HEAD
-      cond do
-        !declared_transition? ->
-          {:error, @not_declated_error}
-
-        guarded_transition? ->
-          guarded_transition?
-
-        true ->
-          struct =
-            struct
-=======
       if declared_transition? do
-        guarded_transition? = Transition.guarded_transition?(state_machine_module, struct, next_state)
+        guarded_transition? =
+          Transition.guarded_transition?(state_machine_module, struct, next_state)
 
         if guarded_transition? do
           guarded_transition?
         else
-          struct = struct
->>>>>>> Don't execute guard transition if transition is not declared
+          struct =
+            struct
             |> Transition.before_callbacks(next_state, state_machine_module)
             |> Transition.persist_struct(next_state, state_machine_module)
             |> Transition.log_transition(next_state, state_machine_module)
             |> Transition.after_callbacks(next_state, state_machine_module)
-<<<<<<< HEAD
 
-          {:ok, struct}
-      end
-
-=======
           {:ok, struct}
         end
       else
         {:error, @not_declated_error}
       end
->>>>>>> Don't execute guard transition if transition is not declared
+
     {:reply, response, states}
   end
 end
