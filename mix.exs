@@ -7,7 +7,7 @@ defmodule Machinery.Mixfile do
       version: "1.0.0",
       elixir: "~> 1.5",
       deps: deps(),
-      compilers: Mix.compilers,
+      compilers: Mix.compilers(),
       description: description(),
       package: package(),
       source_url: "https://github.com/joaomdmoura/machinery",

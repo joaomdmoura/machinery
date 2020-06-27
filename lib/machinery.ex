@@ -93,12 +93,16 @@ defmodule Machinery do
   """
   @spec transition_to(struct, module, String.t()) :: {:ok, struct} | {:error, String.t()}
   def transition_to(struct, state_machine_module, next_state) do
-    GenServer.call(Machinery.Transitions, {
-      :run,
-      struct,
-      state_machine_module,
-      next_state
-    }, :infinity)
+    GenServer.call(
+      Machinery.Transitions,
+      {
+        :run,
+        struct,
+        state_machine_module,
+        next_state
+      },
+      :infinity
+    )
   catch
     :exit, error_tuple ->
       exception = deep_first_of_tuple(error_tuple)

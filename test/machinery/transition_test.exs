@@ -8,6 +8,7 @@ defmodule MachineryTest.TransitionTest do
       "created" => ["partial", "completed"],
       "partial" => "completed"
     }
+
     assert Transition.declared_transition?(transitions, "created", "partial")
     assert Transition.declared_transition?(transitions, "created", "completed")
     assert Transition.declared_transition?(transitions, "partial", "completed")
@@ -17,8 +18,9 @@ defmodule MachineryTest.TransitionTest do
   test "declared_transition?/3 for a declared transition that allows transition for any state" do
     transitions = %{
       "created" => "completed",
-      "*" =>"canceled"
+      "*" => "canceled"
     }
+
     assert Transition.declared_transition?(transitions, "created", "completed")
     assert Transition.declared_transition?(transitions, "created", "canceled")
     assert Transition.declared_transition?(transitions, "completed", "canceled")
