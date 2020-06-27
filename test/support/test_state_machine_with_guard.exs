@@ -11,7 +11,6 @@ defmodule MachineryTest.TestStateMachineWithGuard do
     # Code to simulate and force an exception inside a
     # guard function.
     if Map.get(struct, :force_exception) do
-      IO.inspect "raising"
       Machinery.non_existing_function_should_raise_error()
     end
 

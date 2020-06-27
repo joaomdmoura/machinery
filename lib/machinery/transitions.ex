@@ -36,7 +36,6 @@ defmodule Machinery.Transitions do
     # actually updating the struct and retuning the tuple.
     declared_transition? = Transition.declared_transition?(transitions, current_state, next_state)
     guarded_transition? = Transition.guarded_transition?(state_machine_module, struct, next_state, extra)
-    # IO.inspect "guarded? #{guarded_transition?}"
 
     response = cond do
       !declared_transition? ->

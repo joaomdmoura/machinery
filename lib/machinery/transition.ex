@@ -26,7 +26,6 @@ defmodule Machinery.Transition do
   """
   @spec guarded_transition?(module, struct, atom, map) :: boolean
   def guarded_transition?(module, struct, state, extra) do
-    # IO.puts "guarded_transition?\n#{inspect(module)}\n#{inspect(struct)}\n#{inspect(state)}\n#{inspect(extra)}"
     case run_or_fallback(
            &module.guard_transition/3,
            &guard_transition_fallback/4,
