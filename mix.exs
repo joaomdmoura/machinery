@@ -29,7 +29,7 @@ defmodule Machinery.Mixfile do
   defp deps do
     [
       {:excoveralls, "~> 0.7", only: :test},
-      {:ecto, "~> 3.0"},
+      {:ecto, "~> 3.0", only: :test},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
