@@ -3,9 +3,9 @@ defmodule MachineryTest.TestStruct do
   use Ecto.Schema
 
   schema "test_structs" do
-    field :my_state, :string
-    field :missing_fields, :boolean
-    field :force_exception, :boolean
+    field(:my_state, :string)
+    field(:missing_fields, :boolean)
+    field(:force_exception, :boolean)
     timestamps()
   end
 

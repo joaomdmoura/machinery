@@ -27,31 +27,36 @@ defmodule Machinery.Transitions do
 
     # Getting current state of the struct or falling back to the
     # first declared state on the struct model.
-    current_state = case Map.get(struct, state_field) do
-      nil -> initial_state
-      current_state -> current_state
-    end
+    current_state =
+      case Map.get(struct, state_field) do
+        nil -> initial_state
+        current_state -> current_state
+      end
 
     # Checking declared transitions and guard functions before
     # actually updating the struct and retuning the tuple.
     declared_transition? = Transition.declared_transition?(transitions, current_state, next_state)
-    guarded_transition? = Transition.guarded_transition?(state_machine_module, struct, next_state, extra)
 
-    response = cond do
-      !declared_transition? ->
+    response =
+      if declared_transition? do
+        guarded_transition? =
+          Transition.guarded_transition?(state_machine_module, struct, next_state, extra)
+
+        if guarded_transition? do
+          guarded_transition?
+        else
+          struct =
+            struct
+            |> Transition.before_callbacks(next_state, state_machine_module, extra)
+            |> Transition.persist_struct(next_state, state_machine_module, extra)
+            |> Transition.log_transition(next_state, state_machine_module, extra)
+            |> Transition.after_callbacks(next_state, state_machine_module, extra)
+
+          {:ok, struct}
+        end
+      else
         {:error, @not_declated_error}
-
-      guarded_transition? ->
-        guarded_transition?
-
-      true ->
-        struct = struct
-          |> Transition.before_callbacks(next_state, state_machine_module, extra)
-          |> Transition.persist_struct(next_state, state_machine_module, extra)
-          |> Transition.log_transition(next_state, state_machine_module, extra)
-          |> Transition.after_callbacks(next_state, state_machine_module, extra)
-        {:ok, struct}
-    end
+      end
     {:reply, response, states}
   end
 end

@@ -7,7 +7,7 @@ defmodule Machinery.Mixfile do
       version: "1.0.0",
       elixir: "~> 1.5",
       deps: deps(),
-      compilers: Mix.compilers,
+      compilers: Mix.compilers(),
       description: description(),
       package: package(),
       source_url: "https://github.com/joaomdmoura/machinery",
@@ -29,7 +29,7 @@ defmodule Machinery.Mixfile do
   defp deps do
     [
       {:excoveralls, "~> 0.7", only: :test},
-      {:ecto, "~> 3.0"},
+      {:ecto, "~> 3.0", only: :test},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
