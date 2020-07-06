@@ -92,14 +92,15 @@ defmodule Machinery do
       {:ok, %User{state: :completed}}
   """
   @spec transition_to(struct, module, String.t()) :: {:ok, struct} | {:error, String.t()}
-  def transition_to(struct, state_machine_module, next_state) do
+  def transition_to(struct, state_machine_module, next_state, extra) do
     GenServer.call(
       Machinery.Transitions,
       {
         :run,
         struct,
         state_machine_module,
-        next_state
+        next_state,
+        extra
       },
       :infinity
     )
