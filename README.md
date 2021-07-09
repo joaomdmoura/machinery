@@ -1,10 +1,14 @@
 # Machinery
 
 [![Build Status](https://travis-ci.org/joaomdmoura/machinery.svg?branch=master)](https://travis-ci.org/joaomdmoura/machinery)
-[![Source Level](https://app.sourcelevel.io/github/joaomdmoura/machinery.svg)](https://app.sourcelevel.io/github/joaomdmoura/machinery)
 [![Coverage Status](https://coveralls.io/repos/github/joaomdmoura/machinery/badge.svg?branch=master)](https://coveralls.io/github/joaomdmoura/machinery?branch=master)
+[![Module Version](https://img.shields.io/hexpm/v/machinery.svg)](https://hex.pm/packages/machinery)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/machinery/)
+[![Total Download](https://img.shields.io/hexpm/dt/machinery.svg)](https://hex.pm/packages/machinery)
+[![License](https://img.shields.io/hexpm/l/machinery.svg)](https://github.com/joaomdmoura/machinery/blob/master/LICENSE)
+[![Last Updated](https://img.shields.io/github/last-commit/joaomdmoura/machinery.svg)](https://github.com/joaomdmoura/machinery/commits/master)
 
-![Machinery](https://github.com/joaomdmoura/machinery/blob/master/logo.png)
+![Machinery](./assets/logo.png)
 
 Machinery is a thin State Machine library for Elixir that integrates with
 Phoenix out of the box.
@@ -13,6 +17,7 @@ It's just a small layer that provides a DSL for declaring states
 and having guard clauses + callbacks for structs in general.
 
 ### Do you always need a state machine to be a process?
+
 Yes? This is not your library. You might be better off with
 another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
 
@@ -28,7 +33,7 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 
 ## Installing
 
-The package can be installed by adding `machinery` to your list of
+The package can be installed by adding `:machinery` to your list of
 dependencies in `mix.exs`:
 
 ```elixir
@@ -103,6 +108,7 @@ To transit a struct into another state, you just need to
 call `Machinery.transition_to/3`.
 
 ### `Machinery.transition_to/3`
+
 It takes three arguments:
 
 - `struct`: The `struct` you want to transit to another state.
@@ -116,7 +122,7 @@ Machinery.transition_to(your_struct, YourStateMachine, "next_state")
 # {:ok, updated_struct}
 ```
 
-### Example:
+### Example
 
 ```elixir
 user = Accounts.get_user!(1)
@@ -124,6 +130,7 @@ Machinery.transition_to(user, UserStateMachine, "complete")
 ```
 
 ## Persist State
+
 To persist the struct and the state transition automatically, instead of having
 Machinery changing the struct itself, you can declare a `persist/2` function on
 the state machine module.
@@ -134,7 +141,7 @@ between the before and after transition callbacks.
 
 **`persist/2` should always return the updated struct.**
 
-### Example:
+### Example
 
 ```elixir
 defmodule YourProject.UserStateMachine do
@@ -153,6 +160,7 @@ end
 ```
 
 ## Logging Transitions
+
 To log/persist the transitions itself Machinery provides a callback
 `log_transitions/2` that will be called on every transition.
 
@@ -163,7 +171,7 @@ and after the persist function.
 
 **`log_transition/2` should always return the updated struct.**
 
-### Example:
+### Example
 
 ```elixir
 defmodule YourProject.UserStateMachine do
@@ -183,6 +191,7 @@ end
 ```
 
 ## Guard functions
+
 Create guard conditions by adding signatures of the `guard_transition/2`
 function, it will receive two arguments, the `struct` and an `string` of the
 state it will transit to, use this second argument to pattern matching the
@@ -200,7 +209,7 @@ Guard conditions will allow the transition if it returns anything other than a t
   - `{:error, "cause"}`: Transition won't be allowed.
   - `_` *(anything else)*: Guard clause will allow the transition.
 
-### Example:
+### Example
 
 ```elixir
 defmodule YourProject.UserStateMachine do
@@ -243,7 +252,7 @@ def before_transition(struct, "state"), do: struct
 def after_transition(struct, "state"), do: struct
 ```
 
-### Example:
+### Example
 
 ```elixir
 defmodule YourProject.UserStateMachine do
@@ -265,3 +274,19 @@ defmodule YourProject.UserStateMachine do
     end
 end
 ```
+
+## Copyright and License
+
+Copyright (c) 2016 João M. D. Moura
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
