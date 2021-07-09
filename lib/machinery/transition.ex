@@ -81,7 +81,7 @@ defmodule Machinery.Transition do
   end
 
   @doc """
-  Function resposible for triggering transitions persistence.
+  Function responsible for triggering transitions persistence.
   This is meant to be for internal use only.
   """
   @spec log_transition(struct, atom, module) :: struct
@@ -145,7 +145,7 @@ defmodule Machinery.Transition do
 
   # If the exception passed is related to a specific signature of
   # guard_transition/2 it will fallback returning true and
-  # allwoing the transition, otherwise it will raise the exception.
+  # allowing the transition, otherwise it will raise the exception.
   defp guard_transition_fallback(_struct, _state, error, _field) do
     if error.function == :guard_transition && error.arity == 2 do
       true

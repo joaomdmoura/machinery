@@ -42,7 +42,7 @@ defmodule Machinery do
   - `states`: A List of Strings representing each state.
   - `transitions`: A Map for each state and it allowed next state(s).
 
-  P.S. The first state declared will be considered the intial state
+  P.S. The first state declared will be considered the initial state
   """
   defmacro __using__(opts) do
     field = Keyword.get(opts, :field, :state)
@@ -75,7 +75,7 @@ defmodule Machinery do
   end
 
   @doc """
-  Triggers the transition of a struct to a new state, accordinly to a specific
+  Triggers the transition of a struct to a new state, accordingly to a specific
   state machine module, if it passes any existing guard functions.
   It also runs any before or after callbacks and returns a tuple with
   `{:ok, struct}`, or `{:error, "reason"}`.
