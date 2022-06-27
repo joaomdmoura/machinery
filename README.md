@@ -90,10 +90,10 @@ defmodule YourProject.UserStateMachine do
     field: :custom_state_name,
     # The first state declared will be considered
     # the initial state.
-    states: ["created", "partial", "complete", "canceled"],
+    states: ["created", "partial", "completed", "canceled"],
     transitions: %{
-      "created" =>  ["partial", "complete"],
-      "partial" => "complete",
+      "created" =>  ["partial", "completed"],
+      "partial" => "completed",
       "*" => "canceled"
     }
 end
@@ -126,7 +126,7 @@ Machinery.transition_to(your_struct, YourStateMachine, "next_state")
 
 ```elixir
 user = Accounts.get_user!(1)
-Machinery.transition_to(user, UserStateMachine, "complete")
+Machinery.transition_to(user, UserStateMachine, "completed")
 ```
 
 ## Persist State
@@ -148,8 +148,8 @@ defmodule YourProject.UserStateMachine do
   alias YourProject.Accounts
 
   use Machinery,
-    states: ["created", "complete"],
-    transitions: %{"created" => "complete"}
+    states: ["created", "completed"],
+    transitions: %{"created" => "completed"}
 
   def persist(struct, next_state) do
     # Updating a user on the database with the new state.
@@ -178,8 +178,8 @@ defmodule YourProject.UserStateMachine do
   alias YourProject.Accounts
 
   use Machinery,
-    states: ["created", "complete"],
-    transitions: %{"created" => "complete"}
+    states: ["created", "completed"],
+    transitions: %{"created" => "completed"}
 
   def log_transition(struct, _next_state) do
     # Log transition here, save on the DB or whatever.
@@ -214,11 +214,11 @@ Guard conditions will allow the transition if it returns anything other than a t
 ```elixir
 defmodule YourProject.UserStateMachine do
   use Machinery,
-    states: ["created", "complete"],
-    transitions: %{"created" => "complete"}
+    states: ["created", "completed"],
+    transitions: %{"created" => "completed"}
 
-  # Guard the transition to the "complete" state.
-  def guard_transition(struct, "complete") do
+  # Guard the transition to the "completed" state.
+  def guard_transition(struct, "completed") do
     if Map.get(struct, :missing_fields) == true do
       {:error, "There are missing fields"}
     end
@@ -257,9 +257,9 @@ def after_transition(struct, "state"), do: struct
 ```elixir
 defmodule YourProject.UserStateMachine do
   use Machinery,
-    states: ["created", "partial", "complete"],
+    states: ["created", "partial", "completed"],
     transitions: %{
-      "created" =>  ["partial", "complete"],
+      "created" =>  ["partial", "completed"],
       "partial" => "completed"
     }
 
