@@ -88,8 +88,8 @@ defmodule Machinery do
 
   ## Examples
 
-      Machinery.transition_to(%User{state: :partial}, UserStateMachine, :completed)
-      {:ok, %User{state: :completed}}
+      Machinery.transition_to(%User{state: :partial}, UserStateMachine, "completed")
+      {:ok, %User{state: "completed"}}
   """
   @spec transition_to(struct, module, String.t()) :: {:ok, struct} | {:error, String.t()}
   def transition_to(struct, state_machine_module, next_state) do
