@@ -85,21 +85,28 @@ defmodule Machinery do
     - `struct`: The `struct` you want to transit to another state.
     - `state_machine_module`: The module that holds the state machine logic, where Machinery as imported.
     - `next_state`: String of the next state you want to transition to.
+    - `extra_metadata`(optional): Map with extra data you might want to access in any of the Machinery functions (callbacks, guard, log, persist).
 
   ## Examples
 
       Machinery.transition_to(%User{state: :partial}, UserStateMachine, "completed")
       {:ok, %User{state: "completed"}}
+
+      # Or
+
+      Machinery.transition_to(%User{state: :partial}, UserStateMachine, "completed", %{verified: true})
+      {:ok, %User{state: "completed"}}
   """
-  @spec transition_to(struct, module, String.t()) :: {:ok, struct} | {:error, String.t()}
-  def transition_to(struct, state_machine_module, next_state) do
+  @spec transition_to(struct, module, String.t(), map()) :: {:ok, struct} | {:error, String.t()}
+  def transition_to(struct, state_machine_module, next_state, extra_metadata \\ %{}) do
     GenServer.call(
       Machinery.Transitions,
       {
         :run,
         struct,
         state_machine_module,
-        next_state
+        next_state,
+        extra_metadata
       },
       :infinity
     )
