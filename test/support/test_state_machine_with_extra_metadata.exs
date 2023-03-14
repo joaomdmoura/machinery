@@ -31,4 +31,9 @@ defmodule MachineryTest.TestStateMachineWithExtraMetadata do
     struct = Map.merge(struct, extra)
     Map.merge(struct, extra)
   end
+
+  def guard_transition(struct, "completed", extra) do
+    extra = Map.put(extra, :guard_transition, true)
+    Map.merge(struct, extra)
+  end
 end

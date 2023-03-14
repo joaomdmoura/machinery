@@ -76,7 +76,7 @@ defmodule MachineryTest do
 
   test "Transition to should support extra metadata in the after transition function" do
     struct = %TestStruct{my_state: "created"}
-    _expected_struct = %TestStruct{my_state: "completed", missing_fields: false, extra: "metadata", persist: true,  after_transition: true}
+    _expected_struct = %TestStruct{my_state: "completed", missing_fields: false, extra: "metadata", persist: true,  after_transition: true, guard_tranistion: true}
     {:ok, updated_struct} = Machinery.transition_to(struct, TestStateMachineWithExtraMetadata, "completed", %{extra: "metadata"})
   
     assert _expected_struct = updated_struct
