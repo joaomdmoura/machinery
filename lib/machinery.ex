@@ -98,7 +98,7 @@ defmodule Machinery do
       {:ok, %User{state: "completed"}}
   """
   @spec transition_to(struct, module, String.t(), map()) :: {:ok, struct} | {:error, String.t()}
-  def transition_to(struct, state_machine_module, next_state, extra_metadata \\ %{}) do
+  def transition_to(struct, state_machine_module, next_state, extra_metadata \\ None) do
     GenServer.call(
       Machinery.Transitions,
       {

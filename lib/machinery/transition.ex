@@ -34,9 +34,10 @@ defmodule Machinery.Transition do
   """
   @spec guarded_transition?(module, struct, atom, map()) :: boolean
   def guarded_transition?(module, struct, state, extra_metadata) do
+    function = if extra_metadata == None, do: &module.guard_transition/2, else: &module.guard_transition/3
+
     case run_or_fallback(
-           &module.guard_transition/3,
-           &module.guard_transition/2,
+           function,
            &guard_transition_fallback/4,
            struct,
            state,
@@ -55,9 +56,10 @@ defmodule Machinery.Transition do
   """
   @spec before_callbacks(struct, atom, module, map()) :: struct
   def before_callbacks(struct, state, module, extra_metadata) do
+    function = if extra_metadata == None, do: &module.before_transition/2, else: &module.before_transition/3
+
     run_or_fallback(
-      &module.before_transition/3,
-      &module.before_transition/2,
+      function,
       &callbacks_fallback/4,
       struct,
       state,
@@ -73,9 +75,10 @@ defmodule Machinery.Transition do
   """
   @spec after_callbacks(struct, atom, module, map()) :: struct
   def after_callbacks(struct, state, module, extra_metadata) do
+    function = if extra_metadata == None, do: &module.after_transition/2, else: &module.after_transition/3
+
     run_or_fallback(
-      &module.after_transition/3,
-      &module.after_transition/2,
+      function,
       &callbacks_fallback/4,
       struct,
       state,
@@ -91,9 +94,10 @@ defmodule Machinery.Transition do
   """
   @spec persist_struct(struct, atom, module, map()) :: struct
   def persist_struct(struct, state, module, extra_metadata) do
+    function = if extra_metadata == None, do: &module.persist/2, else: &module.persist/3
+
     run_or_fallback(
-      &module.persist/3,
-      &module.persist/2,
+      function,
       &persist_fallback/4,
       struct,
       state,
@@ -108,9 +112,10 @@ defmodule Machinery.Transition do
   """
   @spec log_transition(struct, atom, module, map()) :: struct
   def log_transition(struct, state, module, extra_metadata) do
+    function = if extra_metadata == None, do: &module.log_transition/2, else: &module.log_transition/3
+    
     run_or_fallback(
-      &module.log_transition/3,
-      &module.log_transition/2,
+      function,
       &log_transition_fallback/4,
       struct,
       state,
@@ -131,27 +136,19 @@ defmodule Machinery.Transition do
     end
   end
   
-  # run_or_fallback takes a function and a callback, and
-  # runs the function. If the function raises an error, it
-  # runs the callback with the error as an argument.
-  defp run_or_fallback(func, deprecated_func, callback, struct, state, field, extra_metadata) do
-    func.(struct, state, extra_metadata)
+  # This function looks at the arity of a function and calls it with
+  # the appropriate number of parameters, passing in the struct,
+  # state, and extra_metadata. If the function throws an error,
+  # the fallback function is called instead.
+  defp run_or_fallback(func, fallback, struct, state, field, extra_metadata) do
+    case :erlang.fun_info(func)[:arity] do
+      2 -> func.(struct, state)
+      3 -> func.(struct, state, extra_metadata)
+      _ -> raise "Invalid arity for #{inspect(func)}"
+    end
   rescue
-    error in UndefinedFunctionError ->
-      if Enum.member?(@internal_functions, error.function) && error.arity == 3 do
-        deprecated_run_or_fallback(deprecated_func, callback, struct, state, field)
-      else
-        callback.(struct, state, error, field)
-      end
-    error in FunctionClauseError -> callback.(struct, state, error, field)
-  end
-
-  # This function is deprecated and will be removed in the next major release.
-  defp deprecated_run_or_fallback(func, callback, struct, state, field) do
-    func.(struct, state)
-  rescue
-    error in UndefinedFunctionError -> callback.(struct, state, error, field)
-    error in FunctionClauseError -> callback.(struct, state, error, field)
+    error in UndefinedFunctionError -> fallback.(struct, state, error, field)
+    error in FunctionClauseError -> fallback.(struct, state, error, field)
   end
 
   defp persist_fallback(struct, state, error, field) do
