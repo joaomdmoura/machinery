@@ -5,14 +5,6 @@ defmodule Machinery.Transition do
   This is meant to be for internal use only.
   """
 
-  @internal_functions [
-    :guard_transition,
-    :before_transition,
-    :after_transition,
-    :persist,
-    :log_transition
-  ]
-
   @doc """
   Function responsible for checking if the transition from a state to another
   was specifically declared.
@@ -34,7 +26,8 @@ defmodule Machinery.Transition do
   """
   @spec guarded_transition?(module, struct, atom, map()) :: boolean
   def guarded_transition?(module, struct, state, extra_metadata) do
-    function = if extra_metadata == None, do: &module.guard_transition/2, else: &module.guard_transition/3
+    function =
+      if extra_metadata == None, do: &module.guard_transition/2, else: &module.guard_transition/3
 
     case run_or_fallback(
            function,
@@ -56,7 +49,10 @@ defmodule Machinery.Transition do
   """
   @spec before_callbacks(struct, atom, module, map()) :: struct
   def before_callbacks(struct, state, module, extra_metadata) do
-    function = if extra_metadata == None, do: &module.before_transition/2, else: &module.before_transition/3
+    function =
+      if extra_metadata == None,
+        do: &module.before_transition/2,
+        else: &module.before_transition/3
 
     run_or_fallback(
       function,
@@ -75,7 +71,8 @@ defmodule Machinery.Transition do
   """
   @spec after_callbacks(struct, atom, module, map()) :: struct
   def after_callbacks(struct, state, module, extra_metadata) do
-    function = if extra_metadata == None, do: &module.after_transition/2, else: &module.after_transition/3
+    function =
+      if extra_metadata == None, do: &module.after_transition/2, else: &module.after_transition/3
 
     run_or_fallback(
       function,
@@ -112,8 +109,9 @@ defmodule Machinery.Transition do
   """
   @spec log_transition(struct, atom, module, map()) :: struct
   def log_transition(struct, state, module, extra_metadata) do
-    function = if extra_metadata == None, do: &module.log_transition/2, else: &module.log_transition/3
-    
+    function =
+      if extra_metadata == None, do: &module.log_transition/2, else: &module.log_transition/3
+
     run_or_fallback(
       function,
       &log_transition_fallback/4,
@@ -135,7 +133,7 @@ defmodule Machinery.Transition do
       :error -> false
     end
   end
-  
+
   # This function looks at the arity of a function and calls it with
   # the appropriate number of parameters, passing in the struct,
   # state, and extra_metadata. If the function throws an error,
@@ -152,7 +150,7 @@ defmodule Machinery.Transition do
   end
 
   defp persist_fallback(struct, state, error, field) do
-    if error.function == :persist && Enum.member?([2,3], error.arity) do
+    if error.function == :persist && Enum.member?([2, 3], error.arity) do
       Map.put(struct, field, state)
     else
       raise error
@@ -160,7 +158,7 @@ defmodule Machinery.Transition do
   end
 
   defp log_transition_fallback(struct, _state, error, _field) do
-    if error.function == :log_transition && Enum.member?([2,3], error.arity) do
+    if error.function == :log_transition && Enum.member?([2, 3], error.arity) do
       struct
     else
       raise error
@@ -168,7 +166,8 @@ defmodule Machinery.Transition do
   end
 
   defp callbacks_fallback(struct, _state, error, _field) do
-    if error.function in [:after_transition, :before_transition] && Enum.member?([2,3], error.arity) do
+    if error.function in [:after_transition, :before_transition] &&
+         Enum.member?([2, 3], error.arity) do
       struct
     else
       raise error
@@ -179,7 +178,7 @@ defmodule Machinery.Transition do
   # guard_transition/2 it will fallback returning true and
   # allowing the transition, otherwise it will raise the exception.
   defp guard_transition_fallback(_struct, _state, error, _field) do
-    if error.function == :guard_transition && Enum.member?([2,3], error.arity) do
+    if error.function == :guard_transition && Enum.member?([2, 3], error.arity) do
       true
     else
       raise error
