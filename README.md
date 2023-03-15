@@ -1,7 +1,6 @@
 # Machinery
 
-[![Build Status](https://travis-ci.org/joaomdmoura/machinery.svg?branch=master)](https://travis-ci.org/joaomdmoura/machinery)
-[![Coverage Status](https://coveralls.io/repos/github/joaomdmoura/machinery/badge.svg?branch=master)](https://coveralls.io/github/joaomdmoura/machinery?branch=master)
+[![Build Status](https://circleci.com/gh/joaomdmoura/machinery.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs)
 [![Module Version](https://img.shields.io/hexpm/v/machinery.svg)](https://hex.pm/packages/machinery)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/machinery/)
 [![Total Download](https://img.shields.io/hexpm/dt/machinery.svg)](https://hex.pm/packages/machinery)

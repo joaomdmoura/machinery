@@ -8,9 +8,8 @@ defmodule Machinery.Mixfile do
     [
       app: :machinery,
       version: @version,
-      elixir: "~> 1.5",
+      elixir: "~> 1.14",
       compilers: Mix.compilers(),
-      test_coverage: [tool: ExCoveralls],
       deps: deps(),
       docs: docs(),
       package: package()
@@ -25,7 +24,6 @@ defmodule Machinery.Mixfile do
 
   defp deps do
     [
-      {:excoveralls, "~> 0.7", only: :test},
       {:ecto, "~> 3.0", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
@@ -33,9 +31,10 @@ defmodule Machinery.Mixfile do
 
   defp package() do
     [
-      description: "Machinery is a State Machine library for structs in general." <>
-        "It supports guard clauses, callbacks and integrate out of the box" <>
-        "with Phoenix apps.",
+      description:
+        "Machinery is a State Machine library for structs in general." <>
+          "It supports guard clauses, callbacks and integrate out of the box" <>
+          "with Phoenix apps.",
       maintainers: ["João M. D. Moura"],
       licenses: ["Apache-2.0"],
       links: %{
