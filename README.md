@@ -5,23 +5,13 @@
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/machinery/)
 [![Total Download](https://img.shields.io/hexpm/dt/machinery.svg)](https://hex.pm/packages/machinery)
 [![License](https://img.shields.io/hexpm/l/machinery.svg)](https://github.com/joaomdmoura/machinery/blob/master/LICENSE)
-[![Last Updated](https://img.shields.io/github/last-commit/joaomdmoura/machinery.svg)](https://github.com/joaomdmoura/machinery/commits/master)
 
 ![Machinery](./assets/logo.png)
 
-Machinery is a thin State Machine library for Elixir that integrates with
-Phoenix out of the box.
+Machinery is a lightweight State Machine library for Elixir with built-in Phoenix integration. 
+It provides a simple DSL for declaring states and includes support for guard clauses and callbacks.
 
-It's just a small layer that provides a DSL for declaring states
-and having guard clauses + callbacks for structs in general.
-
-### Do you always need a state machine to be a process?
-
-Yes? This is not your library. You might be better off with
-another library or even `gen_statem` or `gen_fsm` from Erlang/OTP.
-
-Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
-
+## Table of Contents
 - [Installing](#installing)
 - [Declaring States](#declaring-states)
 - [Changing States](#changing-states)
@@ -32,8 +22,7 @@ Don't forget to check the [Machinery Docs](https://hexdocs.pm/machinery)
 
 ## Installing
 
-The package can be installed by adding `:machinery` to your list of
-dependencies in `mix.exs`:
+Add `:machinery` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -43,10 +32,10 @@ def deps do
 end
 ```
 
-Create a field `state` (or a name of your choice to be defined later) for the
-module you want to have a state machine, make sure you have declared it as part
-of you `defstruct`, or if it is a Phoenix model make sure you add it to the `schema`,
-as a `string`,  and to the `changeset/2`:
+Create a `state` field (or a custom name) for the module you want to apply a 
+state machine to, and ensure it's declared as part of your defstruct.
+If using a Phoenix model, add it to the schema as a `string` and include it in 
+the `changeset/2` function:
 
 ```elixir
 defmodule YourProject.User do
@@ -66,29 +55,25 @@ end
 
 ## Declaring States
 
-Declare the states as an argument when importing `Machinery` on the module that
-will control your states transitions.
+Create a separate module for your State Machine logic.
+For example, if you want to add a state machine to your `User` model, create a
+`UserStateMachine` module.
 
-It's strongly recommended that you create a new module for your State Machine
-logic. So let's say you want to add it to your `User` model, you should create a
-`UserStateMachine` module to hold your State Machine logic.
+Then import `Machinery` in this new module and declare states as arguments.
 
-Machinery expects a `Keyword` as argument with the keys `field`, `states` and `transitions`.
+Machinery expects a `Keyword` as an argument with the keys `field`, `states` 
+and `transitions`.
 
-- `field`: An atom of your state field name (defaults to `state`)
-- `states`: A List of Strings representing each state.
-- `transitions`: A Map for each state and it allowed next state(s).
+- `field`: An atom representing your state field name (defaults to `state`)
+- `states`: A `List` of strings representing each state.
+- `transitions`: A Map for each state and its allowed next state(s).
 
 ### Example
 
 ```elixir
 defmodule YourProject.UserStateMachine do
   use Machinery,
-    # This is a way to define a custom field, if not defined
-    # it will expect the default `state` field in the struct
-    field: :custom_state_name,
-    # The first state declared will be considered
-    # the initial state.
+    field: :custom_state_name, # Optional, default value is `:field`
     states: ["created", "partial", "completed", "canceled"],
     transitions: %{
       "created" =>  ["partial", "completed"],
@@ -98,23 +83,20 @@ defmodule YourProject.UserStateMachine do
 end
 ```
 
-As you might notice you can use wildcards `"*"` to declare a transition that
-can happen from any state to a specific one.
+You can use wildcards `"*"` to declare a transition that can happen from any 
+state to a specific one.
 
 ## Changing States
 
-To transit a struct into another state, you just need to
-call `Machinery.transition_to/3`.
+To transition a struct to another state, call `Machinery.transition_to/3`.
 
 ### `Machinery.transition_to/3`
 
 It takes three arguments:
 
-- `struct`: The `struct` you want to transit to another state.
-- `state_machine_module`: The module that holds the state machine logic, where Machinery as imported.
+- `struct`: The `struct` you want to transition to another state.
+- `state_machine_module`: The module that holds the state machine logic, where Machinery is imported.
 - `next_event`: `string` of the next state you want the struct to transition to.
-
-**Guard functions, before and after callbacks will be checked automatically.**
 
 ```elixir
 Machinery.transition_to(your_struct, YourStateMachine, "next_state")
@@ -125,18 +107,16 @@ Machinery.transition_to(your_struct, YourStateMachine, "next_state")
 
 ```elixir
 user = Accounts.get_user!(1)
-Machinery.transition_to(user, UserStateMachine, "completed")
+{:ok, updated_user} = Machinery.transition_to(user, UserStateMachine, "completed")
 ```
 
 ## Persist State
 
-To persist the struct and the state transition automatically, instead of having
-Machinery changing the struct itself, you can declare a `persist/2` function on
-the state machine module.
+To persist the struct and state transition, you declare a `persist/2` 
+function in the state machine module. 
 
-It will receive the unchanged `struct` as the first argument and a `string` of the
-next state as the second one, after every state transition. That will be called
-between the before and after transition callbacks.
+This function will receive the unchanged `struct` as the first argument and a 
+`string` of the next state as the second one.
 
 **`persist/2` should always return the updated struct.**
 
@@ -153,6 +133,7 @@ defmodule YourProject.UserStateMachine do
   def persist(struct, next_state) do
     # Updating a user on the database with the new state.
     {:ok, user} = Accounts.update_user(struct, %{state: next_state})
+    # `persist/2` should always return the updated struct
     user
   end
 end
@@ -160,15 +141,13 @@ end
 
 ## Logging Transitions
 
-To log/persist the transitions itself Machinery provides a callback
-`log_transitions/2` that will be called on every transition.
+To log transitions, Machinery provides a `log_transition/2` 
+callback that is called on every transition, `after persist/2`.
 
-It will receive the unchanged `struct` as the first argument and a `string` of
-the next state as the second one, after every state transition.
-This function will be called between the before and after transition callbacks
-and after the persist function.
+This function receives the unchanged `struct` as the first 
+argument and a `string` of the next state as the second one. 
 
-**`log_transition/2` should always return the updated struct.**
+**`log_transition/2` should always return the struct.**
 
 ### Example
 
@@ -181,9 +160,9 @@ defmodule YourProject.UserStateMachine do
     transitions: %{"created" => "completed"}
 
   def log_transition(struct, _next_state) do
-    # Log transition here, save on the DB or whatever.
+    # Log transition here.
     # ...
-    # Return the struct.
+    # `log_transition/2` should always return the struct
     struct
   end
 end
@@ -191,10 +170,12 @@ end
 
 ## Guard functions
 
-Create guard conditions by adding signatures of the `guard_transition/2`
-function, it will receive two arguments, the `struct` and an `string` of the
-state it will transit to, use this second argument to pattern matching the
-desired state you want to guard.
+Create guard conditions by adding `guard_transition/2` function signatures to 
+the state machine module.
+This function receives two arguments: the `struct` and a `string` of the state it 
+will transition to. 
+
+Use the second argument for pattern matching the desired state you want to guard.
 
 ```elixir
 # The second argument is used to pattern match into the state
@@ -225,8 +206,8 @@ defmodule YourProject.UserStateMachine do
 end
 ```
 
-When trying to transition an struct that is blocked by its guard clause you will
-have the following return:
+When trying to transition a struct that is blocked by its guard clause, 
+you will have the following return:
 
 ```elixir
 blocked_struct = %TestStruct{state: "created", missing_fields: true}
@@ -237,16 +218,16 @@ Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
 
 ## Before and After callbacks
 
-You can also use before and after callbacks to handle desired side effects and
+You can also use before and after callbacks to handle desired side effects and 
 reactions to a specific state transition.
 
-You can just declare `before_transition/2` and `after_transition/2`,
-pattern matching the desired state you want to.
+You can declare `before_transition/2` and `after_transition/2`, pattern matching the
+desired state you want to.
 
-**Make sure Before and After callbacks should return the struct.**
+**Before and After callbacks should return the struct.**
 
 ```elixir
-# callbacks should always return the struct.
+# Before and After callbacks should return the struct.
 def before_transition(struct, "state"), do: struct
 def after_transition(struct, "state"), do: struct
 ```
