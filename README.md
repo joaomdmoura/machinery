@@ -8,8 +8,10 @@
 
 ![Machinery](./assets/logo.png)
 
-Machinery is a lightweight State Machine library for Elixir with built-in Phoenix integration. 
-It provides a simple DSL for declaring states and includes support for guard clauses and callbacks.
+Machinery is a lightweight State Machine library for Elixir with built-in 
+Phoenix integration. 
+It provides a simple DSL for declaring states and includes support for guard 
+clauses and callbacks.
 
 ## Table of Contents
 - [Installing](#installing)
@@ -34,6 +36,7 @@ end
 
 Create a `state` field (or a custom name) for the module you want to apply a 
 state machine to, and ensure it's declared as part of your defstruct.
+
 If using a Phoenix model, add it to the schema as a `string` and include it in 
 the `changeset/2` function:
 
@@ -88,18 +91,24 @@ state to a specific one.
 
 ## Changing States
 
-To transition a struct to another state, call `Machinery.transition_to/3`.
+To transition a struct to another state, call `Machinery.transition_to/3` or `Machinery.transition_to/4`.
 
-### `Machinery.transition_to/3`
+### `Machinery.transition_to/3` or ``Machinery.transition_to/4`
 
-It takes three arguments:
+It takes the following arguments:
 
 - `struct`: The `struct` you want to transition to another state.
 - `state_machine_module`: The module that holds the state machine logic, where Machinery is imported.
 - `next_event`: `string` of the next state you want the struct to transition to.
+- *(optional)* `extra_metadata`: `map` with any extra data you might want to access on any of the sate machine functions triggered by the state change
 
 ```elixir
 Machinery.transition_to(your_struct, YourStateMachine, "next_state")
+# {:ok, updated_struct}
+
+# OR
+
+Machinery.transition_to(your_struct, YourStateMachine, "next_state", %{extra: "metadata"})
 # {:ok, updated_struct}
 ```
 
@@ -112,13 +121,13 @@ user = Accounts.get_user!(1)
 
 ## Persist State
 
-To persist the struct and state transition, you declare a `persist/2` 
+To persist the struct and state transition, you declare a `persist/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)*
 function in the state machine module. 
 
 This function will receive the unchanged `struct` as the first argument and a 
 `string` of the next state as the second one.
 
-**`persist/2` should always return the updated struct.**
+**your `persist/2` or `persist/3` should always return the updated struct.**
 
 ### Example
 
@@ -129,11 +138,12 @@ defmodule YourProject.UserStateMachine do
   use Machinery,
     states: ["created", "completed"],
     transitions: %{"created" => "completed"}
-
+  
+  # You can add an optional third argument for the extra metadata.
   def persist(struct, next_state) do
     # Updating a user on the database with the new state.
-    {:ok, user} = Accounts.update_user(struct, %{state: next_state})
-    # `persist/2` should always return the updated struct
+    {:ok, user} = Accounts.update_user(struct, %{state: next_stated})
+    # `persist` should always return the updated struct
     user
   end
 end
@@ -141,13 +151,13 @@ end
 
 ## Logging Transitions
 
-To log transitions, Machinery provides a `log_transition/2` 
-callback that is called on every transition, `after persist/2`.
+To log transitions, Machinery provides a `log_transition/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)*
+callback that is called on every transition, after the `persist` function is executed.
 
 This function receives the unchanged `struct` as the first 
 argument and a `string` of the next state as the second one. 
 
-**`log_transition/2` should always return the struct.**
+**`log_transition/2` or `log_transition/3` should always return the struct.**
 
 ### Example
 
@@ -159,10 +169,11 @@ defmodule YourProject.UserStateMachine do
     states: ["created", "completed"],
     transitions: %{"created" => "completed"}
 
+  # You can add an optional third argument for the extra metadata.
   def log_transition(struct, _next_state) do
     # Log transition here.
     # ...
-    # `log_transition/2` should always return the struct
+    # `log_transition` should always return the struct
     struct
   end
 end
@@ -170,8 +181,8 @@ end
 
 ## Guard functions
 
-Create guard conditions by adding `guard_transition/2` function signatures to 
-the state machine module.
+Create guard conditions by adding `guard_transition/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)* 
+function signatures to the state machine module.
 This function receives two arguments: the `struct` and a `string` of the state it 
 will transition to. 
 
@@ -180,6 +191,8 @@ Use the second argument for pattern matching the desired state you want to guard
 ```elixir
 # The second argument is used to pattern match into the state
 # and guard the transition to it.
+#
+# You can add an optional third argument for the extra metadata.
 def guard_transition(struct, "guarded_state") do
  # Your guard logic here
 end
@@ -221,13 +234,15 @@ Machinery.transition_to(blocked_struct, TestStateMachineWithGuard, "completed")
 You can also use before and after callbacks to handle desired side effects and 
 reactions to a specific state transition.
 
-You can declare `before_transition/2` and `after_transition/2`, pattern matching the
-desired state you want to.
+You can declare `before_transition/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)* 
+and `after_transition/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)*, 
+pattern matching the desired state you want to.
 
 **Before and After callbacks should return the struct.**
 
 ```elixir
 # Before and After callbacks should return the struct.
+# You can add an optional third argument for the extra metadata.
 def before_transition(struct, "state"), do: struct
 def after_transition(struct, "state"), do: struct
 ```
