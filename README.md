@@ -29,7 +29,7 @@ Add `:machinery` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:machinery, "~> 1.0.0"}
+    {:machinery, "~> 1.1.0"}
   ]
 end
 ```

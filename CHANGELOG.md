@@ -2,6 +2,9 @@
 
 ## WIP Version
 
+## 1.1.0
+- Adding extra metadata support for transitions - [Pull Request](https://github.com/joaomdmoura/machinery/pull/85)
+
 ## 1.0.0
 - Fixing overall TYPOs
 [Pull Request#1](https://github.com/joaomdmoura/machinery/pull/45)
