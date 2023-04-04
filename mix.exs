@@ -2,7 +2,7 @@ defmodule Machinery.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/joaomdmoura/machinery"
-  @version "1.0.0"
+  @version "1.1.0"
 
   def project do
     [
@@ -32,8 +32,8 @@ defmodule Machinery.Mixfile do
   defp package() do
     [
       description:
-        "Machinery is a State Machine library for structs in general." <>
-          "It supports guard clauses, callbacks and integrate out of the box" <>
+        "Machinery is a State Machine library for structs in general. " <>
+          "It supports guard clauses, callbacks and integrate out of the box " <>
           "with Phoenix apps.",
       maintainers: ["João M. D. Moura"],
       licenses: ["Apache-2.0"],

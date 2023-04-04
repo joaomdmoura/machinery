@@ -7,6 +7,7 @@ defmodule MachineryTest do
   alias MachineryTest.TestStateMachine
   alias MachineryTest.TestStateMachineDefaultField
   alias MachineryTest.TestStateMachineWithGuard
+  alias MachineryTest.TestStateMachineWithExtraMetadata
   alias MachineryTest.TestStruct
 
   setup do
@@ -55,6 +56,82 @@ defmodule MachineryTest do
 
     assert {:ok, %TestStruct{my_state: "canceled"}} =
              Machinery.transition_to(completed_struct, TestStateMachine, "canceled")
+  end
+
+  test "Transition to should support extra metadata in the persist function" do
+    struct = %TestStruct{my_state: "created", missing_fields: false}
+
+    _expected_struct = %TestStruct{
+      my_state: "canceled",
+      missing_fields: false,
+      extra: "metadata",
+      persist: true
+    }
+
+    {:ok, updated_struct} =
+      Machinery.transition_to(struct, TestStateMachineWithExtraMetadata, "canceled", %{
+        extra: "metadata"
+      })
+
+    assert _expected_struct = updated_struct
+  end
+
+  test "Transition to should support extra metadata in the before transition function" do
+    struct = %TestStruct{my_state: "created"}
+
+    _expected_struct = %TestStruct{
+      my_state: "partial",
+      missing_fields: true,
+      extra: "metadata",
+      persist: true,
+      before_transition: true
+    }
+
+    {:ok, updated_struct} =
+      Machinery.transition_to(struct, TestStateMachineWithExtraMetadata, "partial", %{
+        extra: "metadata"
+      })
+
+    assert _expected_struct = updated_struct
+  end
+
+  test "Transition to should support extra metadata in the after transition function" do
+    struct = %TestStruct{my_state: "created"}
+
+    _expected_struct = %TestStruct{
+      my_state: "completed",
+      missing_fields: false,
+      extra: "metadata",
+      persist: true,
+      after_transition: true,
+      guard_tranistion: true
+    }
+
+    {:ok, updated_struct} =
+      Machinery.transition_to(struct, TestStateMachineWithExtraMetadata, "completed", %{
+        extra: "metadata"
+      })
+
+    assert _expected_struct = updated_struct
+  end
+
+  test "Transition to should support extra metadata in the log function" do
+    struct = %TestStruct{my_state: "created"}
+
+    _expected_struct = %TestStruct{
+      my_state: "canceled",
+      missing_fields: false,
+      extra: "metadata",
+      persist: true,
+      log: true
+    }
+
+    {:ok, updated_struct} =
+      Machinery.transition_to(struct, TestStateMachineWithExtraMetadata, "canceled", %{
+        extra: "metadata"
+      })
+
+    assert _expected_struct = updated_struct
   end
 
   test "Guard functions should not be executed if the transition is invalid" do
