@@ -76,7 +76,7 @@ and `transitions`.
 ```elixir
 defmodule YourProject.UserStateMachine do
   use Machinery,
-    field: :custom_state_name, # Optional, default value is `:field`
+    field: :custom_state_name, # Optional, default value is `:state`
     states: ["created", "partial", "completed", "canceled"],
     transitions: %{
       "created" =>  ["partial", "completed"],
