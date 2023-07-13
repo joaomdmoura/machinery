@@ -68,7 +68,7 @@ Machinery expects a `Keyword` as an argument with the keys `field`, `states`
 and `transitions`.
 
 - `field`: An atom representing your state field name (defaults to `state`)
-- `states`: A `List` of `t:Machinery.state/0`s representing each state.
+- `states`: A `List` of `t:Machinery.Transition.state/0`s representing each state.
 - `transitions`: A Map for each state and its allowed next state(s).
 
 ### Example
@@ -99,7 +99,7 @@ It takes the following arguments:
 
 - `struct`: The `struct` you want to transition to another state.
 - `state_machine_module`: The module that holds the state machine logic, where Machinery is imported.
-- `next_event`: `t:Machinery.state/0` of the next state you want the struct to transition to.
+- `next_event`: `t:Machinery.Transition.state/0` of the next state you want the struct to transition to.
 - *(optional)* `extra_metadata`: `map` with any extra data you might want to access on any of the sate machine functions triggered by the state change
 
 ```elixir
@@ -125,13 +125,13 @@ To persist the struct and state transition, you declare a `persist/2` or `/3` *(
 function in the state machine module.
 
 This function will receive the unchanged `struct` as the first argument and a
-`t:Machinery.state/0` of the next state as the second one.
+`t:Machinery.Transition.state/0` of the next state as the second one.
 
 **your `persist/2` or `persist/3` should always return the updated struct.**
 
 ### Note on `atom()` states and persistence
 
-You may need to deal with deserializing your states if working with `t:atom/0` `t:Machinery.state/0`s and Ecto as `t:atom/0`s will be stored in the database as
+You may need to deal with deserializing your states if working with `t:atom/0` `t:Machinery.Transition.state/0`s and Ecto as `t:atom/0`s will be stored in the database as
 `t:String.t/0`s.
 If you aren't using persistence, this won't be a problem.
 
@@ -161,7 +161,7 @@ To log transitions, Machinery provides a `log_transition/2` or `/3` *(in case yo
 callback that is called on every transition, after the `persist` function is executed.
 
 This function receives the unchanged `struct` as the first
-argument and a `t:Machinery.state/0` of the next state as the second one.
+argument and a `t:Machinery.Transition.state/0` of the next state as the second one.
 
 **`log_transition/2` or `log_transition/3` should always return the struct.**
 
@@ -189,7 +189,7 @@ end
 
 Create guard conditions by adding `guard_transition/2` or `/3` *(in case you wanna access metadata passed on `transition_to/4`)*
 function signatures to the state machine module.
-This function receives two arguments: the `struct` and a `t:Machinery.state/0` of the state it
+This function receives two arguments: the `struct` and a `t:Machinery.Transition.state/0` of the state it
 will transition to.
 
 Use the second argument for pattern matching the desired state you want to guard.

@@ -5,12 +5,17 @@ defmodule Machinery.Transition do
   This is meant to be for internal use only.
   """
 
+  @typedoc """
+  A state should be a string or an atom. Whichever corresponds with the underlying state field on the given struct.
+  """
+  @type state :: atom() | String.t()
+
   @doc """
   Function responsible for checking if the transition from a state to another
   was specifically declared.
   This is meant to be for internal use only.
   """
-  @spec declared_transition?(list, atom, atom) :: boolean
+  @spec declared_transition?(map(), state(), state()) :: boolean()
   def declared_transition?(transitions, current_state, next_state) do
     if matches_wildcard?(transitions, next_state) do
       true
@@ -24,7 +29,7 @@ defmodule Machinery.Transition do
   unless another existing guard condition exists.
   This is meant to be for internal use only.
   """
-  @spec guarded_transition?(module, struct, atom, map()) :: boolean
+  @spec guarded_transition?(module(), struct(), state(), map()) :: boolean()
   def guarded_transition?(module, struct, state, extra_metadata) do
     function =
       if extra_metadata == None, do: &module.guard_transition/2, else: &module.guard_transition/3
@@ -47,7 +52,7 @@ defmodule Machinery.Transition do
   fallback to a boilerplate behaviour.
   This is meant to be for internal use only.
   """
-  @spec before_callbacks(struct, atom, module, map()) :: struct
+  @spec before_callbacks(struct(), state(), module(), map()) :: struct()
   def before_callbacks(struct, state, module, extra_metadata) do
     function =
       if extra_metadata == None,
@@ -69,7 +74,7 @@ defmodule Machinery.Transition do
   fallback to a boilerplate behaviour.
   This is meant to be for internal use only.
   """
-  @spec after_callbacks(struct, atom, module, map()) :: struct
+  @spec after_callbacks(struct(), state(), module(), map()) :: struct()
   def after_callbacks(struct, state, module, extra_metadata) do
     function =
       if extra_metadata == None, do: &module.after_transition/2, else: &module.after_transition/3
@@ -89,7 +94,7 @@ defmodule Machinery.Transition do
   changing state.
   This is meant to be for internal use only.
   """
-  @spec persist_struct(struct, atom, module, map()) :: struct
+  @spec persist_struct(struct(), state(), module(), map()) :: struct()
   def persist_struct(struct, state, module, extra_metadata) do
     function = if extra_metadata == None, do: &module.persist/2, else: &module.persist/3
 
@@ -107,7 +112,7 @@ defmodule Machinery.Transition do
   Function responsible for triggering transitions persistence.
   This is meant to be for internal use only.
   """
-  @spec log_transition(struct, atom, module, map()) :: struct
+  @spec log_transition(struct(), state(), module(), map()) :: struct()
   def log_transition(struct, state, module, extra_metadata) do
     function =
       if extra_metadata == None, do: &module.log_transition/2, else: &module.log_transition/3
