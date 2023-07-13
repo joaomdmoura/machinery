@@ -13,7 +13,7 @@ defmodule Machinery do
   ## Parameters
 
     - `opts`: A Keyword including `states` and `transitions`.
-      - `states`: A List of Strings representing each state.
+      - `states`: A List of `t:state/0` representing each state.
       - `transitions`: A Map for each state and it allowed next state(s).
 
   ## Example
@@ -31,6 +31,11 @@ defmodule Machinery do
     ```
   """
 
+  @typedoc """
+  A state should be a string or an atom. Whichever corresponds with the underlying state field on the given struct.
+  """
+  @type state :: atom | String.t()
+
   @doc """
   Main macro function that will be executed upon the load of the
   module using it.
@@ -39,7 +44,7 @@ defmodule Machinery do
 
   It expects a `Keyword` as argument with two keys `states` and `transitions`.
 
-  - `states`: A List of Strings representing each state.
+  - `states`: A List of `t:state/0` representing each state.
   - `transitions`: A Map for each state and it allowed next state(s).
 
   P.S. The first state declared will be considered the initial state
@@ -84,7 +89,7 @@ defmodule Machinery do
 
     - `struct`: The `struct` you want to transit to another state.
     - `state_machine_module`: The module that holds the state machine logic, where Machinery as imported.
-    - `next_state`: String of the next state you want to transition to.
+    - `next_state`: `t:state/0` of the next state you want to transition to.
     - `extra_metadata`(optional): Map with extra data you might want to access in any of the Machinery functions (callbacks, guard, log, persist).
 
   ## Examples
@@ -97,7 +102,7 @@ defmodule Machinery do
       Machinery.transition_to(%User{state: :partial}, UserStateMachine, "completed", %{verified: true})
       {:ok, %User{state: "completed"}}
   """
-  @spec transition_to(struct, module, String.t(), map()) :: {:ok, struct} | {:error, String.t()}
+  @spec transition_to(struct, module, state(), map()) :: {:ok, struct} | {:error, String.t()}
   def transition_to(struct, state_machine_module, next_state, extra_metadata \\ None) do
     GenServer.call(
       Machinery.Transitions,
